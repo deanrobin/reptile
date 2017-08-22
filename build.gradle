@@ -1,0 +1,44 @@
+group 'Reptile'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.4.RELEASE'
+    }
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    mavenCentral()
+}
+
+springBoot {
+    executable = true
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
+    compile ('org.springframework.boot:spring-boot-starter-web') {
+        exclude group:'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '1.5.6.RELEASE'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.alibaba:fastjson:1.2.9'
+    compile 'mysql:mysql-connector-java:6.0.6'
+}
