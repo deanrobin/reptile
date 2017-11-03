@@ -2,16 +2,17 @@ package com.dean.reptile.bean;
 
 /**
  * Created by Admin on 2017/8/16.
+ * @author Dean
  */
 public class Accessories {
     private int id;
-    private String name;
     private String hero;
+    private String accessories;
+    private String createTime;
+    private String lastUpdated;
     private double price;
-    private String queryTime;
-    private double dealPrice;
-    private String dealTime;
-    private int huzuId;
+    private String source;
+    private String url;
 
     public int getId() {
         return id;
@@ -21,59 +22,59 @@ public class Accessories {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getHero() {
         return hero;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getQueryTime() {
-        return queryTime;
-    }
-
-    public double getDealPrice() {
-        return dealPrice;
-    }
-
-    public String getDealTime() {
-        return dealTime;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setHero(String hero) {
         this.hero = hero;
     }
 
+    public String getAccessories() {
+        return accessories;
+    }
+
+    public void setAccessories(String accessories) {
+        this.accessories = accessories;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setQueryTime(String queryTime) {
-        this.queryTime = queryTime;
+    public String getSource() {
+        return source;
     }
 
-    public void setDealPrice(double dealPrice) {
-        this.dealPrice = dealPrice;
+    public void setSource(String source) {
+        this.source = source;
     }
 
-    public void setDealTime(String dealTime) {
-        this.dealTime = dealTime;
+    public String getUrl() {
+        return url;
     }
 
-    public int getHuzuId() {
-        return huzuId;
-    }
-
-    public void setHuzuId(int huzuId) {
-        this.huzuId = huzuId;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

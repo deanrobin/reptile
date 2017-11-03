@@ -41,4 +41,5 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.alibaba:fastjson:1.2.9'
     compile 'mysql:mysql-connector-java:6.0.6'
+    compile 'org.quartz-scheduler:quartz:2.3.0'
 }

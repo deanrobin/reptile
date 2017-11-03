@@ -33,7 +33,8 @@ public class QueryService {
             sql = sql + " and queryTime like'%" + queryTime + "%' ";
         }
         DataProcess data = DataProcess.getInstance();
-        List<Accessories> list = data.query(sql);
+        List<Accessories> list = null;
+//                data.query(sql);
         System.out.println("query result size:" + list.size());
         return  list;
     }
