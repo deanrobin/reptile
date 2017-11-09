@@ -1,9 +1,13 @@
 package com.dean.reptile.bean;
 
+import java.io.Serializable;
+
 /**
  * @author Dean
  */
-public class Hero {
+public class Hero implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     private String name;
 
     public String getName() {
@@ -12,5 +16,12 @@ public class Hero {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Hero(String name) {
+        this.name = name;
+    }
+
+    public Hero() {
     }
 }

@@ -47,46 +47,43 @@ public class DataProcess {
 
             // 执行查询
             stmt = conn.createStatement();
-            String sql;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+//    public static boolean insert404(int i) {
+//        String sql = "insert into notexist(queryTime, huzuId) values(?,?);";
+//        try {
+//            PreparedStatement ps = conn.\(sql);
+//            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
+//            ps.setInt(2, i);
+//            int res = ps.executeUpdate();
+//            if (res > 0) {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        return false;
+//    }
 
-
-    public static boolean insert404(int i) {
-        String sql = "insert into notexist(queryTime, huzuId) values(?,?);";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
-            ps.setInt(2, i);
-            int res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
-    public static boolean insertError(int i) {
-        String sql = "insert into error(queryTime, huzuId) values(?,?);";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
-            ps.setInt(2, i);
-            int res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
+//    public static boolean insertError(int i) {
+//        String sql = "insert into error(queryTime, huzuId) values(?,?);";
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
+//            ps.setInt(2, i);
+//            int res = ps.executeUpdate();
+//            if (res > 0) {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        return false;
+//    }
 
 }
