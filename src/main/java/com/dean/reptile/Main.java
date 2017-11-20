@@ -9,7 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * Created by Admin on 2017/8/15.
  */
 @SpringBootApplication
-@MapperScan("com.dean.reptile")
+@MapperScan("com.dean.reptile.db")
 public class Main {
 
     /**

@@ -1,9 +1,7 @@
 package com.dean.reptile.db;
 
 import com.dean.reptile.bean.Hero;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +12,7 @@ public interface HeroMapper {
     @Select("select * from hero")
     List<Hero> findAll();
 
+    @Options(useGeneratedKeys = true)
     @Insert("insert into hero(name) values(#{name})")
-    void insert(Hero heros);
+    int insert(Hero heros);
 }

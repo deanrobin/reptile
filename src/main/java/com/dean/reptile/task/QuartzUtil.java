@@ -55,7 +55,6 @@ public class QuartzUtil {
                     ).build();// 产生触发器
         }
 
-
         // 向Scheduler中添加job任务和trigger触发器
         sche.scheduleJob(jobDetail, trigger);
 

@@ -2,7 +2,32 @@ package com.dean.reptile.task;
 
 import org.quartz.SchedulerException;
 
-public class QuartzClient {
+public class QuartzClient extends Thread {
+    private static QuartzClient quartzClient = null;
+
+    public static QuartzClient instance() {
+        if (quartzClient == null) {
+            synchronized (QuartzClient.class) {
+                if (quartzClient == null) {
+                    quartzClient = new QuartzClient();
+                }
+            }
+        }
+        return quartzClient;
+    }
+
+    private QuartzClient(){
+
+    }
+
+    public void addJob() {
+        try {
+            QuartzUtil.addJob("job", "reptileC5", ReptileC5.class, null);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 //    public static void main(String[] args) {
 //        try {

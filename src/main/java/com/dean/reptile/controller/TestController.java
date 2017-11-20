@@ -18,7 +18,8 @@ public class TestController {
     public Hero addHero(@RequestParam String name) {
         Hero hero = new Hero();
         hero.setName(name);
-        heroMapper.insert(hero);
+        int i = heroMapper.insert(hero);
+        int x = hero.getId();
         return hero;
     }
 

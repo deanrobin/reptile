@@ -8,11 +8,12 @@ public class Accessories {
     private int id;
     private String hero;
     private String accessories;
-    private String createTime;
-    private String lastUpdated;
+    private long createTime;
+    private long lastUpdated;
     private double price;
     private String source;
     private String url;
+    private boolean subscribe;
 
     public int getId() {
         return id;
@@ -38,19 +39,19 @@ public class Accessories {
         this.accessories = accessories;
     }
 
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
-    public String getLastUpdated() {
+    public long getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(String lastUpdated) {
+    public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
@@ -77,4 +78,13 @@ public class Accessories {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public boolean isSubscribe() {
+        return subscribe;
+    }
+
+    public void setSubscribe(boolean subscribe) {
+        this.subscribe = subscribe;
+    }
+
 }

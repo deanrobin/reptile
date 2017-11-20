@@ -1,6 +1,7 @@
 package com.dean.reptile.controller;
 
 import com.dean.reptile.Start;
+import com.dean.reptile.task.QuartzClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,4 +27,18 @@ public class InitController {
         new Thread(start).start();
         return "Get data has started";
     }
+
+    @RequestMapping("/begin")
+    @ResponseBody
+    public String begin() {
+        long l = System.currentTimeMillis();
+        if (l - visitTime < timeInterval) {
+            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+        }
+        visitTime = l;
+        QuartzClient quartzClient = QuartzClient.instance();
+        quartzClient.addJob();
+        return "Get data has started";
+    }
+
 }

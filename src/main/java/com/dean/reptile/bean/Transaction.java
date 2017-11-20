@@ -3,11 +3,11 @@ package com.dean.reptile.bean;
 /**
  * @author Dean
  */
-public class Transcation {
+public class Transaction {
     private int id;
     private String hero;
     private int accessoriesId;
-    private String transactionTime;
+    private long transactionTime;
     private double transactionPrice;
     private String transactionName;
     private int transactionNumber;
@@ -36,11 +36,11 @@ public class Transcation {
         this.accessoriesId = accessoriesId;
     }
 
-    public String getTransactionTime() {
+    public long getTransactionTime() {
         return transactionTime;
     }
 
-    public void setTransactionTime(String transactionTime) {
+    public void setTransactionTime(long transactionTime) {
         this.transactionTime = transactionTime;
     }
 

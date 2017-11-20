@@ -20,54 +20,7 @@ public class Reptile {
     private static final String WEB = "http://www.huzu.com/market/tradelogs/";
 
 
-//    public String getHtml (int num) {
-//        // 定义一个字符串用来存储网页内容
-//        String result = "";
-//        // 定义一个缓冲字符输入流
-//        BufferedReader in = null;
-//        try
-//        {
-//            // 将string转成url对象
-//            URL realUrl = new URL(WEB + num);
-//            // 初始化一个链接到那个url的连接
-//            HttpURLConnection connection = (HttpURLConnection )realUrl.openConnection();
-//            // 开始实际的连接
-//            int i = connection.getResponseCode();
-//            if (i != 200) {
-//                System.out.println("this Url:" + WEB + num + "  --> response code:" + i);
-//                return null;
-//            }
-//            connection.connect();
-//            // 初始化 BufferedReader输入流来读取URL的响应
-//            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            // 用来临时存储抓取到的每一行的数据
-//            String line;
-//            while ((line = in.readLine()) != null)
-//            {
-//                // 遍历抓取到的每一行并将其存储到result里面
-//                result += line;
-//            }
-//        } catch (Exception e)
-//        {
-//            System.out.println("发送GET请求出现异常！" + e);
-//            e.printStackTrace();
-//        }
-//        // 使用finally来关闭输入流
-//        finally
-//        {
-//            try
-//            {
-//                if (in != null)
-//                {
-//                    in.close();
-//                }
-//            } catch (Exception e2)
-//            {
-//                e2.printStackTrace();
-//            }
-//        }
-//        return result;
-//    }
+
 //
 //    public Accessories parseHtml (String str, int huzu) {
 //        Accessories accessories = new Accessories();
