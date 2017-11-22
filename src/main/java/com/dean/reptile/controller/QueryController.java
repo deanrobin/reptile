@@ -29,7 +29,8 @@ public class QueryController {
             @RequestParam(value = "hero", required = false) String hero,
             @RequestParam(value = "queryTime", required = false) String queryTime
     ) {
-        return QueryService.instance().query(name, hero, queryTime);
+//        return QueryService.instance().query(name, hero, queryTime);
+        return null;
     }
 
 

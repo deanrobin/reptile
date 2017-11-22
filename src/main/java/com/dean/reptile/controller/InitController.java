@@ -4,6 +4,7 @@ import com.dean.reptile.Start;
 import com.dean.reptile.task.QuartzClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -14,18 +15,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class InitController {
     private static long visitTime = 0L;
     private static long timeInterval = 1 * 60 * 60 * 1000L;
+    private static boolean init = false;
+//    @RequestMapping("/start")
+//    @ResponseBody
+//    public String start() {
+//        long l = System.currentTimeMillis();
+//        if (l - visitTime < timeInterval) {
+//            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+//        }
+//        visitTime = l;
+//        Start start = new Start();
+//        new Thread(start).start();
+//        return "Get data has started";
+//    }
 
-    @RequestMapping("/start")
+    @RequestMapping("/init")
     @ResponseBody
-    public String start() {
-        long l = System.currentTimeMillis();
-        if (l - visitTime < timeInterval) {
-            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+    public int init(
+            @RequestParam(value = "seconds", required = false) Integer seconds) {
+        if (!init) {
+            return 0;
         }
-        visitTime = l;
-        Start start = new Start();
-        new Thread(start).start();
-        return "Get data has started";
+        init = true;
+        QuartzClient quartzClient = QuartzClient.instance();
+        quartzClient.init(seconds);
+        return 1;
     }
 
     @RequestMapping("/begin")
@@ -41,4 +55,16 @@ public class InitController {
         return "Get data has started";
     }
 
+    @RequestMapping("/getBuy")
+    @ResponseBody
+    public String getBuy() {
+        long l = System.currentTimeMillis();
+        if (l - visitTime < timeInterval) {
+            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+        }
+        visitTime = l;
+        QuartzClient quartzClient = QuartzClient.instance();
+        quartzClient.getPurchaseIntent();
+        return "Get buy data has started";
+    }
 }

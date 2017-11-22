@@ -37,7 +37,7 @@ public class ReptileC5 implements Job {
         accessoriesMapper = ApplicationContextHolder.getContext().getBean(AccessoriesMapper.class);
         transactionMapper = ApplicationContextHolder.getContext().getBean(TransactionMapper.class);
         for (int i = 0; i < MAX; ++i) {
-            WebResult webResult = HttpClient.instance().getHtml(URL + i + END);
+            WebResult webResult = HttpClient.instance().getHtml(URL + "1970" + END);
             if (webResult.getCode() != 200) {
                 continue;
             }
@@ -50,12 +50,17 @@ public class ReptileC5 implements Job {
 
             List<Accessories> list = accessoriesMapper.findAll(accessories);
             if (list.size() == 0) {
-                accessories.setCreateTime(System.currentTimeMillis());
+                long now = System.currentTimeMillis();
+                accessories.setCreateTime(now);
+                accessories.setLastUpdated(now);
                 accessories.setSource(SOURCE);
                 accessories.setSubscribe(false);
                 accessories.setUrl(webResult.getUrl());
                 accessoriesMapper.insert(accessories);
             } else {
+                int id = list.get(0).getId();
+                accessoriesMapper.updatePrice(id, System.currentTimeMillis(), accessories.getPrice());
+                // 后面只需要accessories的id和hero属性
                 accessories = list.get(0);
             }
 

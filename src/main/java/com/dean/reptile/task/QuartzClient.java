@@ -4,6 +4,7 @@ import org.quartz.SchedulerException;
 
 public class QuartzClient extends Thread {
     private static QuartzClient quartzClient = null;
+    private static Integer day = 24 * 60 * 60;
 
     public static QuartzClient instance() {
         if (quartzClient == null) {
@@ -20,6 +21,14 @@ public class QuartzClient extends Thread {
 
     }
 
+    public void init(Integer seconds) {
+        try {
+            QuartzUtil.addJob("init", "reptileC5Init", ReptileC5.class, seconds == null || seconds < 60 * 60 ? day : seconds);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addJob() {
         try {
             QuartzUtil.addJob("job", "reptileC5", ReptileC5.class, null);
@@ -27,6 +36,15 @@ public class QuartzClient extends Thread {
             e.printStackTrace();
         }
     }
+
+    public void getPurchaseIntent() {
+        try {
+            QuartzUtil.addJob("buy", "purchaseIntent", PurchaseIntent.class, null);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 //    public static void main(String[] args) {

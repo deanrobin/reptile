@@ -1,6 +1,7 @@
 package com.dean.reptile.analyze;
 
 import com.dean.reptile.bean.Accessories;
+import com.dean.reptile.bean.Purchase;
 import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.util.TimeTool;
 import org.jsoup.Jsoup;
@@ -12,7 +13,6 @@ public class C5 {
     private int counter = 0;
     private Document doc = null;
     private C5() {
-
     }
 
     public C5(String html) {
@@ -68,5 +68,22 @@ public class C5 {
         transaction.setTransactionName(nameNode.text());
         counter += 1;
         return transaction;
+    }
+
+    public Purchase getPurchase(String html) {
+        Purchase purchase = new Purchase();
+
+        try {
+            Document doc = Jsoup.parse(html);
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+
+        return purchase;
     }
 }
