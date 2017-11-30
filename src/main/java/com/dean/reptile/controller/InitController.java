@@ -2,6 +2,7 @@ package com.dean.reptile.controller;
 
 import com.dean.reptile.Start;
 import com.dean.reptile.task.QuartzClient;
+import com.dean.reptile.util.Config;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,4 +68,23 @@ public class InitController {
         quartzClient.getPurchaseIntent();
         return "Get buy data has started";
     }
+
+    @RequestMapping("/getNGA")
+    @ResponseBody
+    public String getNGA(
+            @RequestParam(value = "continue", required = false) Boolean resume
+    ) {
+        long l = System.currentTimeMillis();
+        if (l - visitTime < timeInterval) {
+            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+        }
+        visitTime = l;
+        if (resume != null) {
+            Config.instance().setJobSearchContinue(resume);
+        }
+        QuartzClient quartzClient = QuartzClient.instance();
+        quartzClient.getNGA();
+        return "Get nga";
+    }
+
 }

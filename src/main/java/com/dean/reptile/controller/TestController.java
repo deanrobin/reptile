@@ -26,6 +26,7 @@ public class TestController {
     @RequestMapping("/index")
     @ResponseBody
     public String index() {
+
         return "hello, friend; query url: query/query, param: name, hero, queryTime.Such as: ip/query/query?name=xx&hero=xx";
     }
 }

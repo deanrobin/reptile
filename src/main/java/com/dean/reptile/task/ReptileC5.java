@@ -37,7 +37,7 @@ public class ReptileC5 implements Job {
         accessoriesMapper = ApplicationContextHolder.getContext().getBean(AccessoriesMapper.class);
         transactionMapper = ApplicationContextHolder.getContext().getBean(TransactionMapper.class);
         for (int i = 0; i < MAX; ++i) {
-            WebResult webResult = HttpClient.instance().getHtml(URL + "1970" + END);
+            WebResult webResult = HttpClient.instance().getHtml(URL + "1970" + END, null);
             if (webResult.getCode() != 200) {
                 continue;
             }

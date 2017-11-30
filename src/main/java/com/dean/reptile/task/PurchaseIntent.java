@@ -22,7 +22,7 @@ public class PurchaseIntent implements Job {
         List<Accessories> list = accessoriesMapper.findSubcribe();
         for (Accessories accessories : list) {
             String url = getNewUrl(accessories.getUrl());
-            WebResult webResult = HttpClient.instance().getHtml(url);
+            WebResult webResult = HttpClient.instance().getHtml(url, null);
             if (webResult.getCode() != 200) {
                 continue;
             }

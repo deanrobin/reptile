@@ -22,7 +22,7 @@ public class HttpClient {
         return httpClient;
     }
 
-    public WebResult getHtml (String url) {
+    public WebResult getHtml (String url, String charSet) {
         WebResult webResult = new WebResult();
         webResult.setUrl(url);
         // 定义一个字符串用来存储网页内容
@@ -36,6 +36,10 @@ public class HttpClient {
             HttpURLConnection connection = (HttpURLConnection )realUrl.openConnection();
             connection.setRequestProperty("User-agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
             connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
+            if (charSet != null) {
+                connection.setRequestProperty("Accept-Charset", charSet);
+                connection.setRequestProperty("contentType", charSet);
+            }
             // 开始实际的连接
             int i = connection.getResponseCode();
             webResult.setCode(i);
@@ -45,7 +49,8 @@ public class HttpClient {
             }
             connection.connect();
             // 初始化 BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = charSet == null ? new BufferedReader(new InputStreamReader(connection.getInputStream())) :
+                    new BufferedReader(new InputStreamReader(connection.getInputStream(), charSet));
             // 用来临时存储抓取到的每一行的数据
             String line;
             while ((line = in.readLine()) != null) {

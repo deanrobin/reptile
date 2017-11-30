@@ -45,7 +45,13 @@ public class QuartzClient extends Thread {
         }
     }
 
-
+    public void getNGA() {
+        try {
+            QuartzUtil.addJob("nga", "jobSearch", JobSearch.class, null);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
 
 //    public static void main(String[] args) {
 //        try {

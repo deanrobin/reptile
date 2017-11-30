@@ -75,7 +75,7 @@ public class C5 {
 
         try {
             Document doc = Jsoup.parse(html);
-            
+
 
         } catch (Exception e) {
             e.printStackTrace();
