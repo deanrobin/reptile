@@ -4,12 +4,14 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Created by Admin on 2017/8/15.
  */
 @SpringBootApplication
 @MapperScan("com.dean.reptile.db")
+@EnableScheduling
 public class Main {
 
     /**

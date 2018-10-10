@@ -33,5 +33,4 @@ public class QueryController {
         return null;
     }
 
-
 }

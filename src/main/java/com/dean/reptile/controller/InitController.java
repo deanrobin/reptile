@@ -1,12 +1,16 @@
 package com.dean.reptile.controller;
 
-import com.dean.reptile.Start;
+import com.dean.reptile.bean.response.ResponseBean;
+import com.dean.reptile.constant.JobEnum;
+import com.dean.reptile.constant.ResponseStatus;
+import com.dean.reptile.constant.TimesCache;
 import com.dean.reptile.task.QuartzClient;
-import com.dean.reptile.util.Config;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /**
  * Created by Admin on 2017/8/16.
@@ -56,6 +60,27 @@ public class InitController {
         return "Get data has started";
     }
 
+    /**
+     * 更新饰品名字列表
+     * @return
+     */
+    @RequestMapping("/updateList")
+    @ResponseBody
+    public ResponseBean getAllJewelry() {
+        ResponseBean responseBean = new ResponseBean();
+        long now = System.currentTimeMillis();
+        if (now - TimesCache.getTime(JobEnum.UPDATE_JEWELRY_LIST) < timeInterval) {
+            responseBean.setMessage("you need wait for about:" + (now - visitTime) / (1000 * 60) + " minute");
+            responseBean.setStatus(ResponseStatus.TIME_TOO_SHORT.getstatus());
+            return responseBean;
+        }
+
+        visitTime = now;
+        QuartzClient quartzClient = QuartzClient.instance();
+        quartzClient.addJob();
+        return ResponseBean.getSuccess();
+    }
+
     @RequestMapping("/getBuy")
     @ResponseBody
     public String getBuy() {
@@ -67,24 +92,6 @@ public class InitController {
         QuartzClient quartzClient = QuartzClient.instance();
         quartzClient.getPurchaseIntent();
         return "Get buy data has started";
-    }
-
-    @RequestMapping("/getNGA")
-    @ResponseBody
-    public String getNGA(
-            @RequestParam(value = "continue", required = false) Boolean resume
-    ) {
-        long l = System.currentTimeMillis();
-        if (l - visitTime < timeInterval) {
-            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
-        }
-        visitTime = l;
-        if (resume != null) {
-            Config.instance().setJobSearchContinue(resume);
-        }
-        QuartzClient quartzClient = QuartzClient.instance();
-        quartzClient.getNGA();
-        return "Get nga";
     }
 
 }
