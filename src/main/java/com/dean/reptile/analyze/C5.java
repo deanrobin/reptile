@@ -1,6 +1,7 @@
 package com.dean.reptile.analyze;
 
 import com.dean.reptile.bean.Accessories;
+import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.Purchase;
 import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.util.TimeTool;
@@ -19,11 +20,11 @@ public class C5 {
         doc = Jsoup.parse(html);
     }
 
-    public Accessories getAccessories () {
-        Accessories accessories = new Accessories();
+    public Jewelry getJewelry () {
+        Jewelry jewelry = new Jewelry();
         try {
             Element name = doc.select("div.name").first();
-            accessories.setAccessories(name.text());
+            jewelry.setName(name.text());
             Elements heros = doc.select("div.ft-gray").select(".mt-5");
 
             String hero = heros.last().text();
@@ -33,19 +34,25 @@ public class C5 {
             } else {
                 hero = hero.split("：")[1];
             }
-            accessories.setHero(hero);
+            jewelry.setHeroName(hero);
 
             Element priceNode = doc.select("div.hero").first();
             String priceText = priceNode.child(0).text();
             String price = priceText.substring(priceText.indexOf("￥") + 1, priceText.indexOf(" )"));
-            accessories.setPrice(Double.valueOf(price));
+            jewelry.setIndicativePrice(Double.valueOf(price));
+
+            Elements prices = doc.select("span.ft-gold");
+            String lastPriceText = prices.first().text();
+            String lastPrice = lastPriceText.substring(lastPriceText.indexOf("￥") + 1);
+
+            jewelry.setLastPrice(Double.valueOf(lastPrice));
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
-        return accessories;
+        return jewelry;
     }
 
     public Transaction getTransaction() {

@@ -34,31 +34,31 @@ public class InitController {
 //        return "Get data has started";
 //    }
 
-    @RequestMapping("/init")
-    @ResponseBody
-    public int init(
-            @RequestParam(value = "seconds", required = false) Integer seconds) {
-        if (!init) {
-            return 0;
-        }
-        init = true;
-        QuartzClient quartzClient = QuartzClient.instance();
-        quartzClient.init(seconds);
-        return 1;
-    }
-
-    @RequestMapping("/begin")
-    @ResponseBody
-    public String begin() {
-        long l = System.currentTimeMillis();
-        if (l - visitTime < timeInterval) {
-            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
-        }
-        visitTime = l;
-        QuartzClient quartzClient = QuartzClient.instance();
-        quartzClient.addJob();
-        return "Get data has started";
-    }
+//    @RequestMapping("/init")
+//    @ResponseBody
+//    public int init(
+//            @RequestParam(value = "seconds", required = false) Integer seconds) {
+//        if (!init) {
+//            return 0;
+//        }
+//        init = true;
+//        QuartzClient quartzClient = QuartzClient.instance();
+//        quartzClient.init(seconds);
+//        return 1;
+//    }
+//
+//    @RequestMapping("/begin")
+//    @ResponseBody
+//    public String begin() {
+//        long l = System.currentTimeMillis();
+//        if (l - visitTime < timeInterval) {
+//            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+//        }
+//        visitTime = l;
+//        QuartzClient quartzClient = QuartzClient.instance();
+//        quartzClient.addJob();
+//        return "Get data has started";
+//    }
 
     /**
      * 更新饰品名字列表
@@ -76,8 +76,8 @@ public class InitController {
         }
 
         visitTime = now;
-        QuartzClient quartzClient = QuartzClient.instance();
-        quartzClient.addJob();
+//        QuartzClient quartzClient = QuartzClient.instance();
+//        quartzClient.addJob();
         return ResponseBean.getSuccess();
     }
 

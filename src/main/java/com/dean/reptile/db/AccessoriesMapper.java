@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+//@Configurable
 @Service
-@Configurable
 public interface AccessoriesMapper {
 
     @Select("select * from accessories where accessories=#{accessories} and hero=#{hero}")

@@ -1,5 +1,6 @@
 package com.dean.reptile.task;
 
+//import com.dean.reptile.task.C5Task.ReptileC5;
 import org.quartz.SchedulerException;
 
 public class QuartzClient extends Thread {
@@ -21,21 +22,21 @@ public class QuartzClient extends Thread {
 
     }
 
-    public void init(Integer seconds) {
-        try {
-            QuartzUtil.addJob("init", "reptileC5Init", ReptileC5.class, seconds == null || seconds < 60 * 60 ? day : seconds);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addJob() {
-        try {
-            QuartzUtil.addJob("job", "reptileC5", ReptileC5.class, null);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void init(Integer seconds) {
+//        try {
+//            QuartzUtil.addJob("init", "reptileC5Init", ReptileC5.class, seconds == null || seconds < 60 * 60 ? day : seconds);
+//        } catch (SchedulerException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public void addJob() {
+//        try {
+//            QuartzUtil.addJob("job", "reptileC5", ReptileC5.class, null);
+//        } catch (SchedulerException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void getPurchaseIntent() {
         try {
