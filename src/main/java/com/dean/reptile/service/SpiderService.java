@@ -1,8 +1,6 @@
-package com.dean.reptile.task;
+package com.dean.reptile.service;
 
-import org.quartz.Job;
-
-public abstract class C5BaseTask implements Job {
+public class SpiderService {
 
     protected static final String BASE_URL = "https://www.c5game.com/dota/";
 

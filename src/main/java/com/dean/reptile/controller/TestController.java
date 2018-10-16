@@ -13,15 +13,15 @@ public class TestController {
     @Autowired
     private HeroMapper heroMapper;
 
-    @RequestMapping(value = "/add" , method = RequestMethod.GET)
-    @ResponseBody
-    public Hero addHero(@RequestParam String name) {
-        Hero hero = new Hero();
-        hero.setName(name);
-        int i = heroMapper.insert(hero);
-        int x = hero.getId();
-        return hero;
-    }
+//    @RequestMapping(value = "/add" , method = RequestMethod.GET)
+//    @ResponseBody
+//    public Hero addHero(@RequestParam String name) {
+//        Hero hero = new Hero();
+//        hero.setName(name);
+//        int i = heroMapper.insert(hero);
+//        int x = hero.getId();
+//        return hero;
+//    }
 
     @RequestMapping("/index")
     @ResponseBody

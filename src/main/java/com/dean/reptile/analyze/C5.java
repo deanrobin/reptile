@@ -27,11 +27,19 @@ public class C5 {
             jewelry.setName(name.text());
             Elements heros = doc.select("div.ft-gray").select(".mt-5");
 
+            String quality = heros.first().children().get(1).text();
+            jewelry.setQuality(quality);
+
+            String rarity = heros.first().children().get(2).text();
+            jewelry.setRarity(rarity);
+
             String hero = heros.last().text();
             if (hero.equals("")) {
+                // 配置信使
                 Elements x1 = heros.first().children();
                 hero = x1.get(3).text();
             } else {
+                // 正常英雄
                 hero = hero.split("：")[1];
             }
             jewelry.setHeroName(hero);

@@ -22,6 +22,16 @@ public class Jewelry {
     private Integer status;
     private String source;
 
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -116,5 +126,13 @@ public class Jewelry {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(String rarity) {
+        this.rarity = rarity;
     }
 }
