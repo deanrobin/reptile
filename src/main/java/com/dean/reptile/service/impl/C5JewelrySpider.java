@@ -25,10 +25,11 @@ public class C5JewelrySpider extends SpiderService {
     @Autowired
     private JewelryMapper jewelryMapper;
 
+
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
 
     private static final String URL = BASE_URL + "history/";
-    private static final int MAX = 10000;
+    private static final int MAX = 100000;
     private static final String SOURCE = "C5";
 
     private static Logger log = LoggerFactory.getLogger(C5JewelrySpider.class);
@@ -39,8 +40,8 @@ public class C5JewelrySpider extends SpiderService {
             HERO_SET = HeroCache.getHeroSet();
         }
 
-        for (int i = 0; i < 1; ++i) {
-            String url = URL + "7900" + END;
+        for (int i = 0; i < MAX; ++i) {
+            String url = URL + i + END;
 //            String url = URL + "5567" + END;
             WebResult webResult = HttpClient.instance().getHtml(url, null);
             if (webResult.getCode() != 200) {
@@ -73,7 +74,7 @@ public class C5JewelrySpider extends SpiderService {
                 //type暂时空
                 jewelry.setType("");
 
-                System.out.println(JSON.toJSON(jewelry));
+//                System.out.println(JSON.toJSON(jewelry));
 
                 result = jewelryMapper.insert(jewelry) == 1;
             } else {
@@ -84,11 +85,9 @@ public class C5JewelrySpider extends SpiderService {
             if (!result) {
                 log.error("this result is false:" + url);
             }
+            
+//            email.sendSimpleMail();
         }
     }
 
-
-//    public static void main(String[] args) {
-//        new C5JewelrySpider().updateJewelryList();
-//    }
 }

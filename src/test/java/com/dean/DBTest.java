@@ -28,6 +28,7 @@ public class DBTest {
     @Autowired
     C5JewelrySpider c5JewelrySpider;
 
+
     @Test
     public void insert() {
         JobRecord jobRecord = new JobRecord();

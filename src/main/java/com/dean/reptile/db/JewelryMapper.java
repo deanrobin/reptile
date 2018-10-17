@@ -16,6 +16,6 @@ public interface JewelryMapper {
     @Select("select * from jewelry where name=#{name} and hero_name=#{heroName}")
     Jewelry selectByIndex(@Param("name") String name, @Param("heroName") String heroName);
 
-    @Update("update jewelry set last_price=#{lastPrice}, last_time=#{lastTime} where name=#{name} and hero_name={heroName}")
+    @Update("update jewelry set last_price=#{lastPrice}, last_time=#{lastTime} where name=#{name} and hero_name=#{heroName}")
     int updateLastPrice(Jewelry jewelry);
 }
