@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface JewelryMapper {
 
     @Insert("INSERT INTO jewelry(`name`, hero_name, last_price, create_time, last_time, html, hid, quality, rarity, `status`, indicative_price, source, type) " +

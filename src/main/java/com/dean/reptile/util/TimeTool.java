@@ -15,6 +15,12 @@ public class TimeTool {
         return time.format(date);
     }
 
+    public static String getNow() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat time=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return time.format(date);
+    }
+
     public static long StringToUnixTime(String str, String format) {
         if (format == null) {
             format = "yyyy-MM-dd HH:mm:ss";

@@ -2,10 +2,12 @@ package com.dean.reptile.db;
 
 import com.dean.reptile.bean.Hero;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public interface HeroMapper {
 
     @Insert("insert into hero(name) values(#{name})")

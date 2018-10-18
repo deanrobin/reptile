@@ -15,7 +15,8 @@ public class EmailTest {
 
     @Test
     public void sendEmail() {
-        String strs[] = {"ladeanrobin@163.com", "917709175@qq.com"};
-        email.sendSimpleMail(strs, null, null, "");
+        String strs[] = {"ladeanrobin@163.com"};
+//        email.sendSimpleMail(strs, "试试<ladeanrobin@163.com>", null, "");
+        email.sendSimpleMail(strs, "试试<yiranwenchengzhi@163.com>", null, "");
     }
 }

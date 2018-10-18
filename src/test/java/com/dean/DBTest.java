@@ -43,7 +43,7 @@ public class DBTest {
 
 //        System.out.println(heroMapper.select("ab"));
 
-        System.out.println(heroMapper.update(1, "bc"));
+        System.out.println(heroMapper.update(1, "abc"));
     }
 
     @Test
