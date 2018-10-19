@@ -3,6 +3,7 @@ package com.dean.reptile.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.Jewelry;
+import com.dean.reptile.bean.JewelryStatus;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
 import com.dean.reptile.constant.HeroCache;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -41,6 +43,7 @@ public class C5JewelrySpider extends SpiderService {
         return EmailSubjectEnum.UPDATE_JEWELRY_LIST.getSubject();
     }
 
+    // 抓取全部
     public void updateJewelryList() {
         if (HERO_SET == null) {
             HERO_SET = HeroCache.getHeroSet();
@@ -89,8 +92,12 @@ public class C5JewelrySpider extends SpiderService {
                     jewelry.setType("");
 
 //                System.out.println(JSON.toJSON(jewelry));
-
                     result = jewelryMapper.insert(jewelry) == 1;
+                    log.info("add jewelry record, id:" + jewelry.getId());
+
+                    if (jewelry.getId() != null) {
+                        jewelryMapper.insertJewelryStatus(jewelry.getId(), jewelry.getName());
+                    }
                 } else {
                     jewelry.setLastTime(timestamp);
                     result = jewelryMapper.updateLastPrice(jewelry) == 1;
@@ -102,7 +109,7 @@ public class C5JewelrySpider extends SpiderService {
                     falseNum ++;
                 }
             } catch (Exception e) {
-                log.error("", e);
+                log.error("c5 jewelry number:" + i, e);
                 errorString.append("this url result has exception:" + url + System.lineSeparator());
                 errorNum ++;
             }
@@ -132,4 +139,35 @@ public class C5JewelrySpider extends SpiderService {
 
         return stringBuilder.toString();
     }
+
+    public void crawlHistory() {
+        List<JewelryStatus> list = jewelryMapper.getNeedHistory();
+
+        if (list == null) {
+            log.error("db error, get jewelry need history return null");
+            return;
+        }
+
+        for (JewelryStatus js : list) {
+            Jewelry jewelry = jewelryMapper.selectJewelryById(js.getId());
+            String url = jewelry.getHtml();
+
+            try {
+                WebResult webResult = HttpClient.instance().getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+                C5 c5 = new C5(webResult.getResult());
+
+            } catch (Exception e) {
+
+            }
+
+
+        }
+
+    }
+
+
+
 }

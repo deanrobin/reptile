@@ -10,6 +10,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.List;
+
 public class C5 {
     private int counter = 0;
     private Document doc = null;
@@ -63,27 +65,32 @@ public class C5 {
         return jewelry;
     }
 
-    public Transaction getTransaction() {
-        Transaction transaction = new Transaction();
+    public List<Transaction> getTransactionList() {
 
-        Elements priceNodes = doc.select("span.ft-gold");
-        int goldNum = 3 + counter;
-        if (goldNum >= priceNodes.size()) {
-            return null;
-        }
-        String price = priceNodes.get(goldNum).text();
-        //
-        transaction.setTransactionPrice(Double.valueOf(price.substring(1)));
-        Element timeNode = doc.select("td.item-name").get(counter).nextElementSibling().nextElementSibling().nextElementSibling().nextElementSibling();
-        String time = timeNode.text();
-        //
-        transaction.setTransactionTime(TimeTool.StringToUnixTime("20" + time, null));
-        Element nameNode = doc.select("span.name-ellipsis-130").get(counter);
-        //
-        transaction.setTransactionName(nameNode.text());
-        counter += 1;
-        return transaction;
+        return null;
     }
+
+//    public Transaction getTransaction() {
+//        Transaction transaction = new Transaction();
+//
+//        Elements priceNodes = doc.select("span.ft-gold");
+//        int goldNum = 3 + counter;
+//        if (goldNum >= priceNodes.size()) {
+//            return null;
+//        }
+//        String price = priceNodes.get(goldNum).text();
+//        //
+//        transaction.setTransactionPrice(Double.valueOf(price.substring(1)));
+//        Element timeNode = doc.select("td.item-name").get(counter).nextElementSibling().nextElementSibling().nextElementSibling().nextElementSibling();
+//        String time = timeNode.text();
+//        //
+//        transaction.setTransactionTime(TimeTool.StringToUnixTime("20" + time, null));
+//        Element nameNode = doc.select("span.name-ellipsis-130").get(counter);
+//        //
+//        transaction.setTransactionName(nameNode.text());
+//        counter += 1;
+//        return transaction;
+//    }
 
     public Purchase getPurchase(String html) {
         Purchase purchase = new Purchase();

@@ -5,12 +5,13 @@ package com.dean.reptile.bean;
  */
 public class Transaction {
     private int id;
-    private String hero;
-    private int accessoriesId;
-    private long transactionTime;
-    private double transactionPrice;
-    private String transactionName;
-    private int transactionNumber;
+    private int jewelryId;
+    private String sellerName;
+    private Double finalPrice;
+    private Long timestamp;
+    private String time_string;
+    private String status;
+    private Long createTime;
 
     public int getId() {
         return id;
@@ -20,51 +21,59 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getHero() {
-        return hero;
+    public int getJewelryId() {
+        return jewelryId;
     }
 
-    public void setHero(String hero) {
-        this.hero = hero;
+    public void setJewelryId(int jewelryId) {
+        this.jewelryId = jewelryId;
     }
 
-    public int getAccessoriesId() {
-        return accessoriesId;
+    public String getSellerName() {
+        return sellerName;
     }
 
-    public void setAccessoriesId(int accessoriesId) {
-        this.accessoriesId = accessoriesId;
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 
-    public long getTransactionTime() {
-        return transactionTime;
+    public Double getFinalPrice() {
+        return finalPrice;
     }
 
-    public void setTransactionTime(long transactionTime) {
-        this.transactionTime = transactionTime;
+    public void setFinalPrice(Double finalPrice) {
+        this.finalPrice = finalPrice;
     }
 
-    public double getTransactionPrice() {
-        return transactionPrice;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTransactionPrice(double transactionPrice) {
-        this.transactionPrice = transactionPrice;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getTransactionName() {
-        return transactionName;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTransactionName(String transactionName) {
-        this.transactionName = transactionName;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public int getTransactionNumber() {
-        return transactionNumber;
+    public Long getCreateTime() {
+        return createTime;
     }
 
-    public void setTransactionNumber(int transactionNumber) {
-        this.transactionNumber = transactionNumber;
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getTime_string() {
+        return time_string;
+    }
+
+    public void setTime_string(String time_string) {
+        this.time_string = time_string;
     }
 }

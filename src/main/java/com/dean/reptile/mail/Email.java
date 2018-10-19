@@ -1,6 +1,9 @@
 package com.dean.reptile.mail;
 
+import com.dean.reptile.service.impl.C5JewelrySpider;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,15 +25,21 @@ public class Email {
     String nickname;
 
     private static final String SUBJECT = "爬虫邮件通知";
+    private static Logger log = LoggerFactory.getLogger(Email.class);
 
     public void sendSimpleMail(String[] to, String from, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);
-        message.setTo(to);
-        message.setSubject(StringUtils.isBlank(subject) ? SUBJECT : subject);
-        message.setText(text);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(from);
+            message.setTo(to);
+            message.setSubject(StringUtils.isBlank(subject) ? SUBJECT : subject);
+            message.setText(text);
 
-        mailSender.send(message);
+            mailSender.send(message);
+        } catch (Exception e) {
+            log.error("email send fail!", e);
+        }
+
     }
 
     public void sendEmail(String subject, String text) {
