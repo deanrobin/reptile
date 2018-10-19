@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
+import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
 import com.dean.reptile.constant.HeroCache;
 import com.dean.reptile.constant.StatusEnum;
 import com.dean.reptile.db.HeroMapper;
 import com.dean.reptile.db.JewelryMapper;
+import com.dean.reptile.db.TransactionMapper;
 import com.dean.reptile.service.SpiderService;
 import com.dean.reptile.util.HttpClient;
 import com.dean.reptile.util.TimeTool;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class C5JewelrySpider extends SpiderService {
     private HeroMapper heroMapper;
     @Autowired
     private JewelryMapper jewelryMapper;
+    @Autowired
+    private TransactionMapper transactionMapper;
+
 
 
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
@@ -60,7 +66,7 @@ public class C5JewelrySpider extends SpiderService {
             String url = URL + i + END;
 //            String url = URL + "5567" + END;
             try {
-                WebResult webResult = HttpClient.instance().getHtml(url, null);
+                WebResult webResult = httpClient.getHtml(url, null);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
@@ -91,7 +97,6 @@ public class C5JewelrySpider extends SpiderService {
                     //type暂时空
                     jewelry.setType("");
 
-//                System.out.println(JSON.toJSON(jewelry));
                     result = jewelryMapper.insert(jewelry) == 1;
                     log.info("add jewelry record, id:" + jewelry.getId());
 
@@ -149,25 +154,30 @@ public class C5JewelrySpider extends SpiderService {
         }
 
         for (JewelryStatus js : list) {
-            Jewelry jewelry = jewelryMapper.selectJewelryById(js.getId());
-            String url = jewelry.getHtml();
-
+            //String url = "https://www.c5game.com/dota/history/7900.html";
             try {
-                WebResult webResult = HttpClient.instance().getHtml(url, null);
+                Jewelry jewelry = jewelryMapper.selectJewelryById(js.getId());
+                String url = jewelry.getHtml();
+                WebResult webResult = httpClient.getHtml(url, null);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
                 C5 c5 = new C5(webResult.getResult());
+                List<Transaction> transactions = c5.getTransactionList(jewelry.getId());
 
+                for (Transaction tx : transactions) {
+                    //先查  后插入
+                    Transaction dbTx = transactionMapper.querySameData(tx);
+
+                    if (dbTx == null) {
+                        transactionMapper.insert(tx);
+                    }
+                }
             } catch (Exception e) {
-
+                log.error("", e);
             }
-
-
         }
 
     }
-
-
 
 }

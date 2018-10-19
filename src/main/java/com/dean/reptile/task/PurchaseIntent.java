@@ -18,18 +18,18 @@ public class PurchaseIntent implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        accessoriesMapper = ApplicationContextHolder.getContext().getBean(AccessoriesMapper.class);
-        List<Accessories> list = accessoriesMapper.findSubcribe();
-        for (Accessories accessories : list) {
-            String url = getNewUrl(accessories.getUrl());
-            WebResult webResult = HttpClient.instance().getHtml(url, null);
-            if (webResult.getCode() != 200) {
-                continue;
-            }
-            
-
-            System.out.print(url);
-        }
+        //accessoriesMapper = ApplicationContextHolder.getContext().getBean(AccessoriesMapper.class);
+        //List<Accessories> list = accessoriesMapper.findSubcribe();
+        //for (Accessories accessories : list) {
+        //    String url = getNewUrl(accessories.getUrl());
+        //    WebResult webResult = HttpClient.instance().getHtml(url, null);
+        //    if (webResult.getCode() != 200) {
+        //        continue;
+        //    }
+        //
+        //
+        //    System.out.print(url);
+        //}
     }
 
 

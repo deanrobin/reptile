@@ -46,9 +46,10 @@ public class DBTest {
 
 //        System.out.println(heroMapper.update(1, "abc"));
 //        c5JewelrySpider.updateJewelryList();
-        System.out.println(
-                JSON.toJSON(
-                        jewelryMapper.selectJewelryStatusById(6)));
+//        System.out.println(
+//                JSON.toJSON(
+//                        jewelryMapper.selectJewelryStatusById(6)));
+        c5JewelrySpider.crawlHistory();
     }
 
     @Test

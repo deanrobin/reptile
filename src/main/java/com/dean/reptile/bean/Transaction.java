@@ -9,8 +9,8 @@ public class Transaction {
     private String sellerName;
     private Double finalPrice;
     private Long timestamp;
-    private String time_string;
-    private String status;
+    private String timeString;
+    private int status;
     private Long createTime;
 
     public int getId() {
@@ -53,11 +53,11 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -69,11 +69,11 @@ public class Transaction {
         this.createTime = createTime;
     }
 
-    public String getTime_string() {
-        return time_string;
+    public String getTimeString() {
+        return timeString;
     }
 
-    public void setTime_string(String time_string) {
-        this.time_string = time_string;
+    public void setTimeString(String timeString) {
+        this.timeString = timeString;
     }
 }

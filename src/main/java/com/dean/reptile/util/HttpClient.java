@@ -1,26 +1,43 @@
 package com.dean.reptile.util;
 
+import com.dean.reptile.analyze.C5;
+import com.dean.reptile.bean.CrawlRecord;
 import com.dean.reptile.bean.own.WebResult;
+import com.dean.reptile.db.CrawlMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Component
 public class HttpClient {
-    private HttpClient() {}
-    private static HttpClient httpClient = null;
 
-    public static HttpClient instance() {
-        if (httpClient == null) {
-            synchronized (HttpClient.class) {
-                if (httpClient == null) {
-                    httpClient = new HttpClient();
-                }
-            }
-        }
-        return httpClient;
-    }
+    @Autowired
+    CrawlMapper crawlMapper;
+    @Value("${crawl.html.record}")
+    private boolean recording;
+
+    private static Logger log = LoggerFactory.getLogger(HttpClient.class);
+
+    //private HttpClient() {}
+    //private static HttpClient httpClient = null;
+    //
+    //public static HttpClient instance() {
+    //    if (httpClient == null) {
+    //        synchronized (HttpClient.class) {
+    //            if (httpClient == null) {
+    //                httpClient = new HttpClient();
+    //            }
+    //        }
+    //    }
+    //    return httpClient;
+    //}
 
     public WebResult getHtml (String url, String charSet) {
         WebResult webResult = new WebResult();
@@ -40,6 +57,9 @@ public class HttpClient {
                 connection.setRequestProperty("Accept-Charset", charSet);
                 connection.setRequestProperty("contentType", charSet);
             }
+            // 设置超时
+            connection.setConnectTimeout(1 * 1000);
+            connection.setReadTimeout(1 * 1000);
             // 开始实际的连接
             int i = connection.getResponseCode();
             webResult.setCode(i);
@@ -58,9 +78,10 @@ public class HttpClient {
                 result += line;
             }
             webResult.setResult(result);
+        } catch (java.net.SocketTimeoutException ste) {
+            webResult.setCode(-1);
         } catch (Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
-            e.printStackTrace();
+            log.error("", e);
         } finally {
             try {
                 if (in != null) {
@@ -68,6 +89,11 @@ public class HttpClient {
                 }
             } catch (Exception e2) {
                 e2.printStackTrace();
+            }
+
+            //
+            if (recording) {
+                crawlMapper.insert(url, System.currentTimeMillis(), webResult.getCode());
             }
         }
         return webResult;

@@ -4,16 +4,23 @@ import com.dean.reptile.bean.Accessories;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.Purchase;
 import com.dean.reptile.bean.Transaction;
+import com.dean.reptile.constant.StatusEnum;
+import com.dean.reptile.service.impl.C5JewelrySpider;
 import com.dean.reptile.util.TimeTool;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class C5 {
     private int counter = 0;
+    private static Logger log = LoggerFactory.getLogger(C5.class);
+
     private Document doc = null;
     private C5() {
     }
@@ -57,6 +64,14 @@ public class C5 {
 
             jewelry.setLastPrice(Double.valueOf(lastPrice));
 
+            Element ul = doc.select("ul.sale-item-num").select(".sale-items-sty1").first();
+            Element total = ul.children().first().child(0);
+
+            jewelry.setTotalSales(total.text());
+
+            Element week = doc.select("li.twitm").first();
+            jewelry.setTotalWeek(week.child(0).text());
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -65,9 +80,44 @@ public class C5 {
         return jewelry;
     }
 
-    public List<Transaction> getTransactionList() {
+    public List<Transaction> getTransactionList(int jewelryId) {
+        Elements names = doc.select("span.name-ellipsis-130");
+        Elements prices = doc.select("span.ft-gold");
+        prices.remove(prices.size() -1);
+        Elements times = doc.select("td[style=padding:10px 30px;]");
 
-        return null;
+        //相等具有传递性
+        if (!(names.size() == prices.size() && prices.size() == times.size())) {
+            log.info("names:" + names.size());
+            log.info("prices:" + prices.size());
+            log.info("times" + times.size());
+            return null;
+        }
+
+        List<Transaction> list = new ArrayList<>(names.size());
+
+        int i = 0;
+        for (; i < names.size(); ++i) {
+            Transaction transaction = new Transaction();
+
+            transaction.setJewelryId(jewelryId);
+            transaction.setSellerName(names.get(i).text());
+            String price = prices.get(i).text();
+            // 处理￥ 符号问题
+            transaction.setFinalPrice(Double.valueOf(price.substring(1)));
+
+            String time = times.get(i).text();
+            Long timestamp = TimeTool.StringToUnixTime(time, "yy-MM-DD HH:mm:ss");
+            transaction.setTimeString(time);
+            transaction.setTimestamp(timestamp);
+
+            transaction.setStatus(StatusEnum.SUCCESS.getCode());
+            transaction.setCreateTime(System.currentTimeMillis());
+
+            list.add(transaction);
+        }
+
+        return list;
     }
 
 //    public Transaction getTransaction() {

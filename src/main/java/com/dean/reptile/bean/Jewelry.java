@@ -24,6 +24,25 @@ public class Jewelry {
 
     private String type;
 
+    private String totalSales;
+    private String totalWeek;
+
+    public String getTotalSales() {
+        return totalSales;
+    }
+
+    public void setTotalSales(String totalSales) {
+        this.totalSales = totalSales;
+    }
+
+    public String getTotalWeek() {
+        return totalWeek;
+    }
+
+    public void setTotalWeek(String totalWeek) {
+        this.totalWeek = totalWeek;
+    }
+
     public String getType() {
         return type;
     }
