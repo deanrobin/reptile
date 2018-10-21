@@ -59,10 +59,14 @@ public class C5 {
             jewelry.setIndicativePrice(Double.valueOf(price));
 
             Elements prices = doc.select("span.ft-gold");
-            String lastPriceText = prices.first().text();
-            String lastPrice = lastPriceText.substring(lastPriceText.indexOf("￥") + 1);
 
-            jewelry.setLastPrice(Double.valueOf(lastPrice));
+            if (prices.size() == 1) {
+                jewelry.setLastPrice(0d);
+            } else {
+                String lastPriceText = prices.first().text();
+                String lastPrice = lastPriceText.substring(lastPriceText.indexOf("￥") + 1);
+                jewelry.setLastPrice(Double.valueOf(lastPrice));
+            }
 
             Element ul = doc.select("ul.sale-item-num").select(".sale-items-sty1").first();
             Element total = ul.children().first().child(0);

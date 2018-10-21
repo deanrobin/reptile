@@ -1,6 +1,5 @@
 package com.dean.reptile.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
@@ -13,9 +12,8 @@ import com.dean.reptile.db.HeroMapper;
 import com.dean.reptile.db.JewelryMapper;
 import com.dean.reptile.db.TransactionMapper;
 import com.dean.reptile.service.SpiderService;
-import com.dean.reptile.util.HttpClient;
+import com.dean.reptile.util.SleepTime;
 import com.dean.reptile.util.TimeTool;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,6 @@ public class C5JewelrySpider extends SpiderService {
     @Autowired
     private TransactionMapper transactionMapper;
 
-
-
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
 
     private static final String URL = BASE_URL + "history/";
@@ -52,7 +48,7 @@ public class C5JewelrySpider extends SpiderService {
     // 抓取全部
     public void updateJewelryList() {
         if (HERO_SET == null) {
-            HERO_SET = HeroCache.getHeroSet();
+            HERO_SET = heroMapper.selectAll();
         }
 
         Long begin = System.currentTimeMillis();
@@ -62,10 +58,11 @@ public class C5JewelrySpider extends SpiderService {
         StringBuilder errorString = new StringBuilder();
         int errorNum = 0;
 
-        for (int i = 0; i < MAX; ++i) {
+        for (int i =0; i < MAX; ++i) {
             String url = URL + i + END;
-//            String url = URL + "5567" + END;
+//            String url = "https://www.c5game.com/dota/history/22.html";
             try {
+                Thread.sleep(SleepTime.randomTime());
                 WebResult webResult = httpClient.getHtml(url, null);
                 if (webResult.getCode() != 200) {
                     continue;
@@ -106,6 +103,7 @@ public class C5JewelrySpider extends SpiderService {
                 } else {
                     jewelry.setLastTime(timestamp);
                     result = jewelryMapper.updateLastPrice(jewelry) == 1;
+                    log.info("update jewelry record, id:" + jewelry.getId());
                 }
 
                 if (!result) {
@@ -118,10 +116,11 @@ public class C5JewelrySpider extends SpiderService {
                 errorString.append("this url result has exception:" + url + System.lineSeparator());
                 errorNum ++;
             }
-
-            String content = initEmailText(begin, falseString, falseNum, errorString, errorNum);
-            email.sendEmail(getEmailSubject(), content);
         }
+
+        // for循环结束 发送邮件
+        String content = initEmailText(begin, falseString, falseNum, errorString, errorNum);
+        email.sendEmail(getEmailSubject(), content);
     }
 
     private String initEmailText(Long beginTime, StringBuilder falseText, int falseNum, StringBuilder errorText, int errorNum) {
