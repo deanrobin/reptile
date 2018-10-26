@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CrawlMapper {
 
-    @Insert({"insert into crawl_record(`html`, `timestamp`, `result`) "
-        + "values(#{html}, #{timestamp}, #{result})"})
-    void insert(@Param("html") String html, @Param("timestamp") long timestamp, @Param("result") int result);
+    @Insert({"insert into crawl_record(`html`, `timestamp`, `result`, `proxy`) "
+        + "values(#{html}, #{timestamp}, #{result}, #{proxy})"})
+    void insert(@Param("html") String html, @Param("timestamp") long timestamp, @Param("result") int result, @Param("proxy") String proxy);
 }

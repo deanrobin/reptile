@@ -87,6 +87,7 @@ public class HttpClient {
         String result = "";
         // 定义一个缓冲字符输入流
         BufferedReader in = null;
+        Map.Entry<String, String> entry = getProxy();
         try {
             // 将string转成url对象
             URL realUrl = new URL(url);
@@ -102,8 +103,6 @@ public class HttpClient {
             connection.setConnectTimeout(5 * 1000);
             connection.setReadTimeout(5 * 1000);
             // 设置代理IP
-
-            Map.Entry<String, String> entry = getProxy();
 
             if (entry != null & useProxy) {
                 log.info("this proxy:" + entry.getKey() + ":" + entry.getValue());
@@ -148,8 +147,9 @@ public class HttpClient {
             }
 
             //
+            String proxy = useProxy ? entry.getKey() : "localhost";
             if (recording) {
-                crawlMapper.insert(url, System.currentTimeMillis(), webResult.getCode());
+                crawlMapper.insert(url, System.currentTimeMillis(), webResult.getCode(), proxy);
             }
         }
         return webResult;
