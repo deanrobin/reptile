@@ -13,7 +13,7 @@ public class JewelryTask {
     @Autowired
     C5JewelrySpider c5JewelrySpider;
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    @Scheduled(fixedRate = 7 * 24 * 60 * 60 * 1000)
     public void updateJewelryList() {
         log.info("start update JeweLry List, the task begin");
         c5JewelrySpider.updateJewelryList();

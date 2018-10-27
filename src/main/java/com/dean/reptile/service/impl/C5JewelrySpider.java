@@ -37,6 +37,7 @@ public class C5JewelrySpider extends SpiderService {
     private static final String URL = BASE_URL + "history/";
     private static final int MAX = 100000;
     private static final String SOURCE = "C5";
+    private static final int INITNUM=20631;
 
     private static Logger log = LoggerFactory.getLogger(C5JewelrySpider.class);
 
@@ -58,7 +59,7 @@ public class C5JewelrySpider extends SpiderService {
         StringBuilder errorString = new StringBuilder();
         int errorNum = 0;
 
-        for (int i =0; i < MAX; ++i) {
+        for (int i =INITNUM + 1; i < MAX; ++i) {
             String url = URL + i + END;
 //            String url = "https://www.c5game.com/dota/history/22.html";
             try {
