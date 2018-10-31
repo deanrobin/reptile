@@ -3,6 +3,7 @@ package com.dean.reptile.service.impl;
 import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
+import com.dean.reptile.bean.TaskList;
 import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
@@ -10,6 +11,7 @@ import com.dean.reptile.constant.HeroCache;
 import com.dean.reptile.constant.StatusEnum;
 import com.dean.reptile.db.HeroMapper;
 import com.dean.reptile.db.JewelryMapper;
+import com.dean.reptile.db.TaskMapper;
 import com.dean.reptile.db.TransactionMapper;
 import com.dean.reptile.service.SpiderService;
 import com.dean.reptile.util.SleepTime;
@@ -31,6 +33,8 @@ public class C5JewelrySpider extends SpiderService {
     private JewelryMapper jewelryMapper;
     @Autowired
     private TransactionMapper transactionMapper;
+    @Autowired
+    private TaskMapper taskMapper;
 
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
 
@@ -180,4 +184,81 @@ public class C5JewelrySpider extends SpiderService {
 
     }
 
+    public void updateJewelryListByTaskList() {
+        if (HERO_SET == null) {
+            HERO_SET = heroMapper.selectAll();
+        }
+
+        Long begin = System.currentTimeMillis();
+
+        StringBuilder falseString = new StringBuilder();
+        int falseNum = 0;
+        StringBuilder errorString = new StringBuilder();
+        int errorNum = 0;
+
+        List<TaskList> list = taskMapper.selectAll();
+        for (TaskList task : list) {
+
+            String url = URL + task.getPageNumber() + END;
+//            String url = "https://www.c5game.com/dota/history/22.html";
+            try {
+                WebResult webResult = httpClient.getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+                C5 c5 = new C5(webResult.getResult());
+                Jewelry jewelry = c5.getJewelry();
+
+                Long timestamp = System.currentTimeMillis();
+                if (jewelry.getHeroName().equals("信使")) {
+
+                }
+
+                boolean result = false;
+
+                if (jewelryMapper.selectByIndex(jewelry.getName(), jewelry.getHeroName()) == null) {
+                    String heroName = jewelry.getHeroName();
+
+                    if (!HERO_SET.contains(heroName) && heroMapper.insert(heroName) == 1) {
+                        HERO_SET.add(heroName);
+                    }
+
+                    jewelry.setHtml(url);
+                    jewelry.setHid(Integer.valueOf(task.getPageNumber()));
+                    jewelry.setSource(SOURCE);
+                    jewelry.setCreateTime(timestamp);
+                    jewelry.setLastTime(timestamp);
+
+                    jewelry.setStatus(StatusEnum.SUCCESS.getCode());
+                    //type暂时空
+                    jewelry.setType("");
+
+                    result = jewelryMapper.insert(jewelry) == 1;
+                    log.info("add jewelry record, id:" + jewelry.getId());
+
+                    if (jewelry.getId() != null) {
+                        jewelryMapper.insertJewelryStatus(jewelry.getId(), jewelry.getName());
+                    }
+                } else {
+                    jewelry.setLastTime(timestamp);
+                    result = jewelryMapper.updateLastPrice(jewelry) == 1;
+                    log.info("update jewelry record, id:" + jewelry.getId());
+                }
+
+                if (!result) {
+                    log.error("this result is false:" + url);
+                    falseString.append("this url result is false:" + url + System.lineSeparator());
+                    falseNum ++;
+                }
+            } catch (Exception e) {
+                log.error("c5 jewelry number:" + task.getPageNumber(), e);
+                errorString.append("this url result has exception:" + url + System.lineSeparator());
+                errorNum ++;
+            }
+        }
+
+        // for循环结束 发送邮件
+        String content = initEmailText(begin, falseString, falseNum, errorString, errorNum);
+        email.sendEmail(getEmailSubject(), content);
+    }
 }
