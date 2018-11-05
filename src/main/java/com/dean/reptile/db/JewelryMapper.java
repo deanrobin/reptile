@@ -2,6 +2,7 @@ package com.dean.reptile.db;
 
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
+import com.dean.reptile.bean.ex.JewelryEx;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +37,13 @@ public interface JewelryMapper {
 
     @Select("select * from jewelry_status where crawl_history = true")
     List<JewelryStatus> getNeedHistory();
+
+    @Select("select count(*) from jewelry;")
+    Integer getCount();
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id order by jewelry.id asc limit #{page}, #{count};")
+    List<JewelryEx> query(@Param("page") int page, @Param("count") int count);
+
+    @Update({"update jewelry_status set crawl_history=#{need} where id=#{id}"})
+    int updateNeed(@Param("id") int id, @Param("need") boolean need);
 }

@@ -43,4 +43,15 @@ public class IPUtil {
 
         return ipAddress;
     }
+
+    public static String getLocalAddress() {
+        String ip = "";
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return ip;
+    }
 }
