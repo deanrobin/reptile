@@ -19,10 +19,15 @@ public class JewelryTask {
         c5JewelrySpider.updateJewelryList();
     }
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    @Scheduled(cron = "0 30 9/14/23 * * *")
     public void updateJewelryListByTaskList() {
         log.info("start update JeweLry List By Task List, the task begin");
         c5JewelrySpider.updateJewelryListByTaskList();
     }
 
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    public void fetchTransaction() {
+        log.info("start update JeweLry List By Task List, the task begin");
+        c5JewelrySpider.crawlHistory();
+    }
 }

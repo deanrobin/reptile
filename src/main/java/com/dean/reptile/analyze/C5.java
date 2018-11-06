@@ -1,11 +1,9 @@
 package com.dean.reptile.analyze;
 
-import com.dean.reptile.bean.Accessories;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.Purchase;
 import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.constant.StatusEnum;
-import com.dean.reptile.service.impl.C5JewelrySpider;
 import com.dean.reptile.util.TimeTool;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -115,7 +113,17 @@ public class C5 {
             transaction.setTimeString(time);
             transaction.setTimestamp(timestamp);
 
-            transaction.setStatus(StatusEnum.SUCCESS.getCode());
+            Element state = times.get(i).previousElementSibling();
+            String sm = state.text();
+            if (sm.equals("出售")) {
+                // 出售
+                transaction.setStatus(StatusEnum.SUCCESS.getCode());
+            } else {
+                // 供应
+                transaction.setStatus(StatusEnum.UNFINISHED.getCode());
+            }
+
+//            transaction.setStatus(StatusEnum.SUCCESS.getCode());
             transaction.setCreateTime(System.currentTimeMillis());
 
             list.add(transaction);

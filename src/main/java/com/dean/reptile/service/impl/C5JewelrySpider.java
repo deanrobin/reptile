@@ -174,6 +174,7 @@ public class C5JewelrySpider extends SpiderService {
                     Transaction dbTx = transactionMapper.querySameData(tx);
 
                     if (dbTx == null) {
+                        log.info("there is new transaction insert into DB");
                         transactionMapper.insert(tx);
                     }
                 }
