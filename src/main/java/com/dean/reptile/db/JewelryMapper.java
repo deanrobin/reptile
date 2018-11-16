@@ -46,4 +46,10 @@ public interface JewelryMapper {
 
     @Update({"update jewelry_status set crawl_history=#{need} where id=#{id}"})
     int updateNeed(@Param("id") int id, @Param("need") boolean need);
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_buy = true")
+    List<JewelryEx> getFetchBuy();
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_sell = true")
+    List<JewelryEx> getFetchSell();
 }

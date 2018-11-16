@@ -1,5 +1,6 @@
 package com.dean.reptile.analyze;
 
+import com.dean.reptile.bean.Buyer;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.Purchase;
 import com.dean.reptile.bean.Transaction;
@@ -15,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author dean
+ */
 public class C5 {
     private int counter = 0;
     private static Logger log = LoggerFactory.getLogger(C5.class);
@@ -132,6 +136,25 @@ public class C5 {
         return list;
     }
 
+    public List<Buyer> getBuyerList() {
+        // 由于有二次加载问题
+        // 尝试爬取接口
+        // https://www.c5game.com/api/product/purchase.json?id=553399785&page=1&callback=jQuery1111012741352132017125_1542359944009&_=1542359944010
+        Elements prices = doc.select("span.ft-orange.ft-14");
+        Elements numbers = doc.select("span.ft-14");
+        Elements names = doc.select("a._blank");
+        Elements types = doc.select("span.ft-green");
+
+        System.out.println(doc.select("td.text-center").size());
+        System.out.println(prices.size());
+        System.out.println(numbers.size());
+        System.out.println(names.size());
+        System.out.println(types.size());
+
+        return null;
+
+    }
+
 //    public Transaction getTransaction() {
 //        Transaction transaction = new Transaction();
 //
@@ -170,4 +193,5 @@ public class C5 {
 
         return purchase;
     }
+
 }

@@ -5,6 +5,7 @@ import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
 import com.dean.reptile.bean.TaskList;
 import com.dean.reptile.bean.Transaction;
+import com.dean.reptile.bean.ex.JewelryEx;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
 import com.dean.reptile.constant.HeroCache;
@@ -261,5 +262,50 @@ public class C5JewelrySpider extends SpiderService {
         // for循环结束 发送邮件
         String content = initEmailText(begin, falseString, falseNum, errorString, errorNum);
         email.sendEmail(getEmailSubject(), content);
+    }
+
+    public void fetchBuy() {
+        List<JewelryEx> list = jewelryMapper.getFetchBuy();
+
+        if (list == null) {
+            log.error("db error, get jewelry fetch buy return null");
+            return;
+        }
+        final String prefix = "https://www.c5game.com/dota/";
+        final String suffix = "-P.html";
+
+        for (JewelryEx je : list) {
+            try {
+                String url = prefix + je.getHid() + suffix;
+                WebResult webResult = httpClient.getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+                C5 c5 = new C5(webResult.getResult());
+                c5.getBuyerList();
+                //List<Transaction> transactions = c5.getTransactionList(jewelry.getId());
+                //
+                //for (Transaction tx : transactions) {
+                //    //先查  后插入
+                //    Transaction dbTx = transactionMapper.querySameData(tx);
+                //
+                //    if (dbTx == null) {
+                //        log.info("there is new transaction insert into DB");
+                //        transactionMapper.insert(tx);
+                //    }
+                //}
+            } catch (Exception e) {
+                log.error("", e);
+            }
+        }
+    }
+
+    public void fetchSell() {
+        List<JewelryEx> list = jewelryMapper.getFetchSell();
+
+        if (list == null) {
+            log.error("db error, get jewelry fetch sell return null");
+            return;
+        }
     }
 }

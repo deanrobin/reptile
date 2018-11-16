@@ -8,7 +8,6 @@ import com.dean.reptile.db.HeroMapper;
 import com.dean.reptile.db.JewelryMapper;
 import com.dean.reptile.db.JobRecordMapper;
 import com.dean.reptile.db.TaskMapper;
-import com.dean.reptile.service.TaskService;
 import com.dean.reptile.service.impl.C5JewelrySpider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,9 @@ public class DBTest {
 //        System.out.println(heroMapper.select("ab"));
 
 //        System.out.println(heroMapper.update(1, "abc"));
-        c5JewelrySpider.updateJewelryListByTaskList();
+//        c5JewelrySpider.updateJewelryListByTaskList();
+//        c5JewelrySpider.crawlHistory();
+        c5JewelrySpider.fetchBuy();
 //        System.out.println(
 //                JSON.toJSON(
 //                        jewelryMapper.selectJewelryStatusById(6)));
