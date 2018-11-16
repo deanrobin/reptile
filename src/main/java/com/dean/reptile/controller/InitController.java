@@ -61,4 +61,17 @@ public class InitController {
         return "Get buy data has started";
     }
 
+    /**
+     * 更新饰品名字列表
+     * @return
+     */
+    @RequestMapping("/test")
+    @ResponseBody
+    public ResponseBean test() {
+        ResponseBean responseBean = new ResponseBean();
+        responseBean.setMessage("this is your test!");
+        responseBean.setStatus(ResponseStatus.SUCCESS.getstatus());
+        return responseBean;
+    }
+
 }
