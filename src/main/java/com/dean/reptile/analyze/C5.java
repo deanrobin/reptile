@@ -138,18 +138,14 @@ public class C5 {
         return list;
     }
 
-    public List<Buyer> getBuyerList() {
+    public String getBuyerHttpUrl() {
         // 由于有二次加载问题
         // 尝试爬取接口
         // https://www.c5game.com/api/product/purchase.json?id=553399785&page=1&callback=jQuery1111012741352132017125_1542359944009&_=1542359944010
         Element table = doc.select("table.table.sale-item-table").first();
         Element element = table.child(1);
         String url = element.attr("data-url");
-        System.out.println(url);
-        WebResult webResult = new HttpClient().getHtml()
-
-        return null;
-
+        return url;
     }
 
 //    public Transaction getTransaction() {

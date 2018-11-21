@@ -12,6 +12,7 @@ public class Buyer {
     private Long createTime;
     private Integer status;
     private Integer number;
+    private Long updateTime;
 
 
     public int getId() {
@@ -76,6 +77,14 @@ public class Buyer {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
     }
 }
 

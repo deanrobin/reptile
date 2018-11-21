@@ -13,6 +13,8 @@ public abstract class SpiderService {
 
     protected static final String BASE_URL = "https://www.c5game.com/dota/";
 
+    protected static final String C5_URL = "https://www.c5game.com";
+
     protected static final String END = ".html";
 
     public abstract String getEmailSubject();

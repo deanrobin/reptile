@@ -9,6 +9,7 @@ import com.dean.reptile.db.JewelryMapper;
 import com.dean.reptile.db.JobRecordMapper;
 import com.dean.reptile.db.TaskMapper;
 import com.dean.reptile.service.impl.C5JewelrySpider;
+import com.dean.reptile.util.HttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class DBTest {
 
     @Autowired
     TaskMapper taskMapper;
+
+    @Autowired
+    HttpClient httpClient;
 
 
     @Test
@@ -65,5 +69,12 @@ public class DBTest {
     @Test
     public void testJewelry() {
         c5JewelrySpider.updateJewelryList();
+    }
+
+    @Test
+    public void testHtml() {
+        String url = "https://www.c5game.com/api/product/purchase.json?id=553399785&page=1";
+
+        System.out.println(httpClient.getHtml(url, "null").getResult());;
     }
 }

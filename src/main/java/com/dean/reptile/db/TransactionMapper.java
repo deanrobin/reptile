@@ -1,15 +1,10 @@
 package com.dean.reptile.db;
 
-import com.dean.reptile.bean.JewelryStatus;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.dean.reptile.bean.Transaction;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface TransactionMapper {
