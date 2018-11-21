@@ -21,20 +21,4 @@ public class QueryService {
         }
     }
 
-    public List<Accessories> query(String name, String hero, String queryTime) {
-        String sql = "select * from accessories where 1=1 ";
-        if (name != null && !name.trim().isEmpty()) {
-            sql = sql + " and name like'%" + name + "%' ";
-        }
-        if (hero != null && !hero.trim().isEmpty()) {
-            sql = sql + " and hero like'%" + hero + "%' ";
-        }
-        if (queryTime != null && !queryTime.trim().isEmpty()) {
-            sql = sql + " and queryTime like'%" + queryTime + "%' ";
-        }
-        DataProcess data = DataProcess.getInstance();
-        List<Accessories> list = data.query(sql);
-        System.out.println("query result size:" + list.size());
-        return  list;
-    }
 }

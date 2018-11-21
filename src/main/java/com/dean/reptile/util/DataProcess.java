@@ -47,91 +47,43 @@ public class DataProcess {
 
             // 执行查询
             stmt = conn.createStatement();
-            String sql;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean insert(Accessories ins) {
-        String sql = "insert into accessories(name, hero, price, dealPrice, queryTime, dealTime, huzuId) values(?,?,?,?,?,?,?);";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, ins.getName());
-            ps.setString(2, ins.getHero());
-            ps.setDouble(3, ins.getPrice());
-            ps.setDouble(4, ins.getDealPrice());
-            ps.setString(5, ins.getQueryTime());
-            ps.setString(6, ins.getDealTime());
-            ps.setInt(7, ins.getHuzuId());
-            int res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
+//    public static boolean insert404(int i) {
+//        String sql = "insert into notexist(queryTime, huzuId) values(?,?);";
+//        try {
+//            PreparedStatement ps = conn.\(sql);
+//            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
+//            ps.setInt(2, i);
+//            int res = ps.executeUpdate();
+//            if (res > 0) {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        return false;
+//    }
 
-    public static boolean insert404(int i) {
-        String sql = "insert into notexist(queryTime, huzuId) values(?,?);";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
-            ps.setInt(2, i);
-            int res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
-    public static boolean insertError(int i) {
-        String sql = "insert into error(queryTime, huzuId) values(?,?);";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
-            ps.setInt(2, i);
-            int res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
-    public static List<Accessories> query(String sql) {
-        System.out.println("sql:" + sql);
-        ResultSet rs= null;
-        List<Accessories> list =  new ArrayList<>();
-        try {
-            rs = stmt.executeQuery(sql);
-
-            while(rs.next()) {
-                Accessories ac = new Accessories();
-                ac.setId(rs.getInt("id"));
-                ac.setHero(rs.getString("hero"));
-                ac.setName(rs.getString("name"));
-                ac.setPrice(rs.getDouble("price"));
-                ac.setDealPrice(rs.getDouble("dealPrice"));
-                ac.setQueryTime(rs.getString("queryTime"));
-                ac.setDealTime(rs.getString("dealTime"));
-                ac.setHuzuId(rs.getInt("huzuId"));
-                list.add(ac);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+//    public static boolean insertError(int i) {
+//        String sql = "insert into error(queryTime, huzuId) values(?,?);";
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setString(1, TimeConversionTool.unixTimeToString(System.currentTimeMillis()));
+//            ps.setInt(2, i);
+//            int res = ps.executeUpdate();
+//            if (res > 0) {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        return false;
+//    }
 
 }
