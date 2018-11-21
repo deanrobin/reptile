@@ -1,6 +1,8 @@
 package com.dean.reptile.service.impl;
 
 import com.dean.reptile.analyze.C5;
+import com.dean.reptile.analyze.C5JSON;
+import com.dean.reptile.bean.Buyer;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
 import com.dean.reptile.bean.TaskList;
@@ -17,6 +19,7 @@ import com.dean.reptile.db.TransactionMapper;
 import com.dean.reptile.service.SpiderService;
 import com.dean.reptile.util.SleepTime;
 import com.dean.reptile.util.TimeTool;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,6 +277,7 @@ public class C5JewelrySpider extends SpiderService {
         final String prefix = "https://www.c5game.com/dota/";
         final String suffix = "-P.html";
 
+
         for (JewelryEx je : list) {
             try {
                 String url = prefix + je.getHid() + suffix;
@@ -281,24 +285,32 @@ public class C5JewelrySpider extends SpiderService {
                 if (webResult.getCode() != 200) {
                     continue;
                 }
+
                 C5 c5 = new C5(webResult.getResult());
-                c5.getBuyerList();
-                //List<Transaction> transactions = c5.getTransactionList(jewelry.getId());
-                //
-                //for (Transaction tx : transactions) {
-                //    //先查  后插入
-                //    Transaction dbTx = transactionMapper.querySameData(tx);
-                //
-                //    if (dbTx == null) {
-                //        log.info("there is new transaction insert into DB");
-                //        transactionMapper.insert(tx);
-                //    }
-                //}
+                String buyerUrl = c5.getBuyerHttpUrl();
+                if (StringUtils.isEmpty(buyerUrl)) {
+                    continue;
+                }
+
+                //get 请求
+                url = C5_URL + buyerUrl;
+                webResult = httpClient.getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+
+                List<Buyer> buyers = C5JSON.getBuyers(webResult.getResult(), je.getId());
+                for (Buyer buyer : buyers) {
+                    //TODO
+                }
+
             } catch (Exception e) {
                 log.error("", e);
             }
         }
     }
+
+
 
     public void fetchSell() {
         List<JewelryEx> list = jewelryMapper.getFetchSell();

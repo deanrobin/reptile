@@ -28,13 +28,13 @@ public class JewelryTask {
         c5JewelrySpider.updateJewelryListByTaskList();
     }
 
-    @Scheduled(fixedRate = 1 * 60 * 1000)
+    //@Scheduled(fixedRate = 1 * 60 * 1000)
     public void fetchTransaction() {
 //        log.info("crawel transaction");
         c5JewelrySpider.crawlHistory();
     }
 
-    @Scheduled(fixedRate = 10 * 60 * 1000)
+    //@Scheduled(fixedRate = 10 * 60 * 1000)
     public void noticeNewTx() {
         jewelryService.noticeNewTx();
 //        log.info("start update JeweLry List By Task List, the task begin");
