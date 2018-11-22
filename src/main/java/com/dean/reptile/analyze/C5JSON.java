@@ -44,6 +44,7 @@ public class C5JSON {
                 buyer.setCreateTime(now);
                 buyer.setUpdateTime(now);
                 buyer.setDate(Long.valueOf(obj.getString("update_time")));
+                buyer.setCreateDate(Long.valueOf(obj.getString("create_time")));
                 buyer.setStatus(StatusEnum.SUCCESS.getCode());
                 list.add(buyer);
             }

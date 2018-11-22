@@ -13,7 +13,15 @@ public class Buyer {
     private Integer status;
     private Integer number;
     private Long updateTime;
+    private Long createDate;
 
+    public Long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
+    }
 
     public int getId() {
         return id;

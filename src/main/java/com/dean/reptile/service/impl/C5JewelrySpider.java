@@ -12,6 +12,7 @@ import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
 import com.dean.reptile.constant.HeroCache;
 import com.dean.reptile.constant.StatusEnum;
+import com.dean.reptile.db.BuyerMapper;
 import com.dean.reptile.db.HeroMapper;
 import com.dean.reptile.db.JewelryMapper;
 import com.dean.reptile.db.TaskMapper;
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author dean
+ */
 @Service
 public class C5JewelrySpider extends SpiderService {
 
@@ -39,13 +43,15 @@ public class C5JewelrySpider extends SpiderService {
     private TransactionMapper transactionMapper;
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private BuyerMapper buyerMapper;
 
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
 
     private static final String URL = BASE_URL + "history/";
     private static final int MAX = 100000;
     private static final String SOURCE = "C5";
-    private static final int INITNUM=20631;
+    private static final int INITNUM=0;
 
     private static Logger log = LoggerFactory.getLogger(C5JewelrySpider.class);
 
@@ -300,16 +306,28 @@ public class C5JewelrySpider extends SpiderService {
                 }
 
                 List<Buyer> buyers = C5JSON.getBuyers(webResult.getResult(), je.getId());
-                for (Buyer buyer : buyers) {
-                    //TODO
+
+                if (buyers == null || buyers.isEmpty()) {
+                    continue;
                 }
 
+                for (Buyer buyer : buyers) {
+                   Buyer dbBuyer = buyerMapper.selectByIndex(buyer.getJewelryId(), buyer.getBuyerName(), buyer.getCreateDate());
+                   if (dbBuyer != null) {
+                       //update
+                       buyer.setId(dbBuyer.getId());
+                       buyerMapper.updateLastPrice(buyer);
+                       continue;
+                   }
+
+                   buyerMapper.insert(buyer);
+                   // TODO 怎么做价格通知呢？ 用阻塞队列或者数据库遍历 倾向于前者
+                }
             } catch (Exception e) {
                 log.error("", e);
             }
         }
     }
-
 
 
     public void fetchSell() {
