@@ -148,6 +148,35 @@ public class C5 {
         return url;
     }
 
+    public String getSellerHttpUrl() {
+        try {
+            Element table = doc.select("table.table.sale-item-table").first();
+            Element element = table.child(1);
+            String url = element.attr("data-url");
+            //  return --> /api/product/sale.json?id=553452392
+            // 需要&page=1
+            return url.split("&")[0];
+        } catch (Exception e) {
+            log.error("get seller url error,", e);
+            return null;
+        }
+
+    }
+
+    public Integer maxSellerPage() {
+        try {
+            Element last = doc.select("li.last").first();
+            String str = last.text();
+            String prefix = str.substring(0, str.indexOf(".html"));
+            String number = prefix.split("-")[2];
+            return Integer.valueOf(number);
+        } catch (Exception e) {
+            log.error("seller get page number error", e);
+            return null;
+        }
+
+    }
+
 //    public Transaction getTransaction() {
 //        Transaction transaction = new Transaction();
 //

@@ -5,6 +5,7 @@ import com.dean.reptile.analyze.C5JSON;
 import com.dean.reptile.bean.Buyer;
 import com.dean.reptile.bean.Jewelry;
 import com.dean.reptile.bean.JewelryStatus;
+import com.dean.reptile.bean.Seller;
 import com.dean.reptile.bean.TaskList;
 import com.dean.reptile.bean.Transaction;
 import com.dean.reptile.bean.ex.JewelryEx;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +54,7 @@ public class C5JewelrySpider extends SpiderService {
     private static final int MAX = 100000;
     private static final String SOURCE = "C5";
     private static final int INITNUM=0;
+    private static final String PREFIX = "https://www.c5game.com/dota/";
 
     private static Logger log = LoggerFactory.getLogger(C5JewelrySpider.class);
 
@@ -280,13 +283,13 @@ public class C5JewelrySpider extends SpiderService {
             log.error("db error, get jewelry fetch buy return null");
             return;
         }
-        final String prefix = "https://www.c5game.com/dota/";
+
         final String suffix = "-P.html";
 
 
         for (JewelryEx je : list) {
             try {
-                String url = prefix + je.getHid() + suffix;
+                String url = PREFIX + je.getHid() + suffix;
                 WebResult webResult = httpClient.getHtml(url, null);
                 if (webResult.getCode() != 200) {
                     continue;
@@ -332,10 +335,45 @@ public class C5JewelrySpider extends SpiderService {
 
     public void fetchSell() {
         List<JewelryEx> list = jewelryMapper.getFetchSell();
-
         if (list == null) {
             log.error("db error, get jewelry fetch sell return null");
             return;
+        }
+
+        final String suffix = "-S.html";
+        final String str = "&page=";
+        List<Seller> sellerList = new ArrayList<>();
+        for (JewelryEx je : list) {
+            String url = PREFIX + je.getHid() + suffix;
+            WebResult webResult = httpClient.getHtml(url, null);
+            if (webResult.getCode() != 200) {
+                continue;
+            }
+
+            C5 c5 = new C5(webResult.getResult());
+
+            String sellerUrl = c5.getSellerHttpUrl();
+            if (StringUtils.isEmpty(sellerUrl)) {
+                continue;
+            }
+
+            Integer page = c5.maxSellerPage();
+            for (int i = 1; i <= page; ++i) {
+                String request = PREFIX + sellerUrl + str + i;
+                webResult = httpClient.getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+
+                List<Seller> sellers = C5JSON.getSeller(webResult.getResult(), je.getId());
+
+                sellerList.addAll(sellers);
+            }
+
+        }
+
+        for (Seller seller : sellerList) {
+            //TODO 插入操作 判重 以及通知， 上面的getSeller没实现呢
         }
     }
 }

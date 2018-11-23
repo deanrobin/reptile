@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import com.dean.reptile.bean.Buyer;
+import com.dean.reptile.bean.Seller;
 import com.dean.reptile.constant.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,5 +55,11 @@ public class C5JSON {
             log.info("getBuyers error", e);
             return null;
         }
+    }
+
+    public static List<Seller> getSeller(String doc, Integer jewelryId) {
+        List<Seller> list = new ArrayList<>();
+
+        return list;
     }
 }
