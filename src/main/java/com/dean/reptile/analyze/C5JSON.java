@@ -88,7 +88,7 @@ public class C5JSON {
 
                 seller.setSellerLevel(obj.getJSONObject("owner").getInteger("level"));
                 seller.setSellerSuccessRate(obj.getJSONObject("owner").getString("success_rate"));
-                seller.setSellerName(obj.getJSONObject("owner").getString("avg_time"));
+                seller.setSellerAvgTime(obj.getJSONObject("owner").getString("avg_time"));
 
                 seller.setStatus(StatusEnum.SUCCESS.getCode());
                 list.add(seller);
