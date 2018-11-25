@@ -24,7 +24,7 @@ public interface SellerMapper {
     @Select("select * from seller where jewelry_id=#{jewelryId} and sell_id=#{sellId}")
     Seller selectByIndex(@Param("jewelryId") Integer jewelryId, @Param("sellId") Long sellId);
 
-    @Update({"update seller set price=#{price}, update_time=#{updateTime}, date=#{date} where id=#{id}"})
+    @Update({"update seller set price=#{price}, update_time=#{updateTime}, date=#{date}, status=#{status} where id=#{id}"})
     int updateLastPrice(Seller Seller);
 }
 

@@ -28,7 +28,7 @@ public class JewelryTask {
         c5JewelrySpider.updateJewelryListByTaskList();
     }
 
-    @Scheduled(fixedRate = 1 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 1000)
     public void fetchTransaction() {
 //        log.info("crawel transaction");
         c5JewelrySpider.crawlHistory();
@@ -40,12 +40,12 @@ public class JewelryTask {
 //        log.info("start update JeweLry List By Task List, the task begin");
     }
 
-    @Scheduled(fixedRate = 5 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void fetchBuy() {
         c5JewelrySpider.fetchBuy();
     }
 
-    @Scheduled(fixedRate = 5 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void fetchSell() {
         c5JewelrySpider.fetchSell();
     }

@@ -28,6 +28,7 @@ public class C5JSON {
         try {
             JSONObject json = JSON.parseObject(doc);
             if (json.getIntValue("status") != 200) {
+                log.info("this jewelryId get buyer status != 200");
                 return null;
             }
 
@@ -64,6 +65,7 @@ public class C5JSON {
         try {
             JSONObject json = JSON.parseObject(doc);
             if (json.getIntValue("status") != 200) {
+                log.info("this jewelryId get seller status != 200");
                 return null;
             }
 

@@ -321,6 +321,7 @@ public class C5JewelrySpider extends SpiderService {
                        continue;
                    }
 
+                   log.info("insert new buyer.");
                    buyerMapper.insert(buyer);
                    // TODO 怎么做价格通知呢？ 用阻塞队列或者数据库遍历 倾向于前者
                 }
@@ -357,6 +358,10 @@ public class C5JewelrySpider extends SpiderService {
             }
 
             Integer page = c5.maxSellerPage();
+            // 暂时只收取前两页的， 多了也没有用
+            if (page >= 2) {
+                page = 2;
+            }
             for (int i = 1; i <= page; ++i) {
                 String request = C5_URL + sellerUrl + str + i;
 
@@ -372,7 +377,9 @@ public class C5JewelrySpider extends SpiderService {
                 }
 
                 List<Seller> sellers = C5JSON.getSeller(webResult.getResult(), je.getId());
-
+                if (sellers == null) {
+                    continue;
+                }
                 sellerList.addAll(sellers);
             }
 
@@ -387,8 +394,11 @@ public class C5JewelrySpider extends SpiderService {
                 continue;
             }
 
+            log.info("insert new seller");
             sellerMapper.insert(seller);
 
         }
+
+        log.info("get seller task over.");
     }
 }
