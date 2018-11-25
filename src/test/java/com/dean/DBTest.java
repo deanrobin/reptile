@@ -56,7 +56,8 @@ public class DBTest {
 //        System.out.println(heroMapper.update(1, "abc"));
 //        c5JewelrySpider.updateJewelryListByTaskList();
 //        c5JewelrySpider.crawlHistory();
-        c5JewelrySpider.fetchBuy();
+//        c5JewelrySpider.fetchBuy();
+        c5JewelrySpider.fetchSell();
 //        System.out.println(
 //                JSON.toJSON(
 //                        jewelryMapper.selectJewelryStatusById(6)));

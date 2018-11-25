@@ -13,11 +13,7 @@ import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.constant.EmailSubjectEnum;
 import com.dean.reptile.constant.HeroCache;
 import com.dean.reptile.constant.StatusEnum;
-import com.dean.reptile.db.BuyerMapper;
-import com.dean.reptile.db.HeroMapper;
-import com.dean.reptile.db.JewelryMapper;
-import com.dean.reptile.db.TaskMapper;
-import com.dean.reptile.db.TransactionMapper;
+import com.dean.reptile.db.*;
 import com.dean.reptile.service.SpiderService;
 import com.dean.reptile.util.SleepTime;
 import com.dean.reptile.util.TimeTool;
@@ -47,6 +43,8 @@ public class C5JewelrySpider extends SpiderService {
     private TaskMapper taskMapper;
     @Autowired
     private BuyerMapper buyerMapper;
+    @Autowired
+    private SellerMapper sellerMapper;
 
     private static Set<String> HERO_SET = HeroCache.getHeroSet();
 
@@ -315,7 +313,7 @@ public class C5JewelrySpider extends SpiderService {
                 }
 
                 for (Buyer buyer : buyers) {
-                   Buyer dbBuyer = buyerMapper.selectByIndex(buyer.getJewelryId(), buyer.getBuyerName(), buyer.getCreateDate());
+                   Buyer dbBuyer = buyerMapper.selectByIndex(buyer.getJewelryId(), buyer.getBuyId());
                    if (dbBuyer != null) {
                        //update
                        buyer.setId(dbBuyer.getId());
@@ -330,6 +328,7 @@ public class C5JewelrySpider extends SpiderService {
                 log.error("", e);
             }
         }
+        log.info("get buyer task over.");
     }
 
 
@@ -360,7 +359,7 @@ public class C5JewelrySpider extends SpiderService {
             Integer page = c5.maxSellerPage();
             for (int i = 1; i <= page; ++i) {
                 String request = PREFIX + sellerUrl + str + i;
-                webResult = httpClient.getHtml(url, null);
+                webResult = httpClient.getHtml(request, null);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
@@ -373,7 +372,16 @@ public class C5JewelrySpider extends SpiderService {
         }
 
         for (Seller seller : sellerList) {
-            //TODO 插入操作 判重 以及通知， 上面的getSeller没实现呢
+            //TODO 通知
+            Seller db = sellerMapper.selectByIndex(seller.getJewelryId(), seller.getSellId());
+            if (db != null) {
+                seller.setId(db.getId());
+                sellerMapper.updateLastPrice(seller);
+                continue;
+            }
+
+            sellerMapper.insert(seller);
+
         }
     }
 }

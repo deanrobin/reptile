@@ -46,13 +46,14 @@ public class C5JSON {
                 buyer.setUpdateTime(now);
                 buyer.setDate(Long.valueOf(obj.getString("update_time")));
                 buyer.setCreateDate(Long.valueOf(obj.getString("create_time")));
+                buyer.setBuyId(Long.valueOf(obj.getString("id")));
                 buyer.setStatus(StatusEnum.SUCCESS.getCode());
                 list.add(buyer);
             }
 
             return list;
         } catch (Exception e) {
-            log.info("getBuyers error", e);
+            log.info("getBuyers error, jewelryId:" + jewelryId, e);
             return null;
         }
     }
@@ -60,6 +61,43 @@ public class C5JSON {
     public static List<Seller> getSeller(String doc, Integer jewelryId) {
         List<Seller> list = new ArrayList<>();
 
-        return list;
+        try {
+            JSONObject json = JSON.parseObject(doc);
+            if (json.getIntValue("status") != 200) {
+                return null;
+            }
+
+            JSONArray array = json.getJSONObject("body").getJSONArray("items");
+            int i = 0;
+            for (; i < array.size(); ++i) {
+                JSONObject obj = array.getJSONObject(i);
+
+                Seller seller = new Seller();
+                seller.setJewelryId(jewelryId);
+                seller.setPrice(obj.getDouble("price"));
+                seller.setSellerName(obj.getJSONObject("owner").getString("nickname"));
+//                buyer.setNumber(obj.getInteger("need_num"));
+                seller.setNumber(1);
+
+                long now = System.currentTimeMillis();
+                seller.setCreateTime(now);
+                seller.setUpdateTime(now);
+                seller.setDate(Long.valueOf(obj.getString("update_time")));
+                seller.setCreateDate(Long.valueOf(obj.getString("create_time")));
+                seller.setSellId(Long.valueOf(obj.getString("id")));
+
+                seller.setSellerLevel(obj.getJSONObject("owner").getInteger("level"));
+                seller.setSellerSuccessRate(obj.getJSONObject("owner").getString("success_rate"));
+                seller.setSellerName(obj.getJSONObject("owner").getString("avg_time"));
+
+                seller.setStatus(StatusEnum.SUCCESS.getCode());
+                list.add(seller);
+            }
+
+            return list;
+        } catch (Exception e) {
+            log.info("getSeller error,jewelryId:" + jewelryId, e);
+            return null;
+        }
     }
 }

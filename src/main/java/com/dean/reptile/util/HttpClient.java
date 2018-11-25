@@ -100,8 +100,8 @@ public class HttpClient {
                 connection.setRequestProperty("contentType", charSet);
             }
             // 设置超时
-            connection.setConnectTimeout(5 * 1000);
-            connection.setReadTimeout(5 * 1000);
+            connection.setConnectTimeout(10 * 1000);
+            connection.setReadTimeout(10 * 1000);
             // 设置代理IP
 
             if (entry != null & useProxy) {
