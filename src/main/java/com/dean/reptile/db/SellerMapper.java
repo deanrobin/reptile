@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Update;
 public interface SellerMapper {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert({"insert into buyer(`jewelry_id`, `seller_name`, `number`, `price`, `create_date`, `date`, `create_time`, `update_time`, `status`, `sell_id`, `seller_level`, `seller_success_rate`, `seller_avg_time`) "
+    @Insert({"insert into seller(`jewelry_id`, `seller_name`, `number`, `price`, `create_date`, `date`, `create_time`, `update_time`, `status`, `sell_id`, `seller_level`, `seller_success_rate`, `seller_avg_time`) "
             + "values(#{jewelryId}, #{sellerName}, #{number}, #{price}, #{createDate}, #{date}, #{createTime}, #{updateTime}, #{status}, #{sellId}, #{sellerLevel}, #{sellerSuccessRate}, #{sellerAvgTime})"})
     int insert(Seller seller);
 

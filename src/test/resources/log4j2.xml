@@ -10,6 +10,8 @@
     </Properties>
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
         <!-- Rolling File Appender -->
@@ -23,8 +25,8 @@
             </JsonLayout>-->
             <Filters>
                 <!-- 只记录ERROR级别日志信息，程序打印的其他信息不会被记录 -->
-                <!-- 此level设置的日志级别，是过滤日志文件中打印出的日志信息，和Root的level有所区别 -->
-                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <Policies>
                 <SizeBasedTriggeringPolicy size="100MB" />
@@ -50,7 +52,7 @@
         <!-- All < Trace < Debug < Info < Warn < Error < Fatal < OFF. -->
         　　　　 <!-- 程序会打印高于或等于所设置级别的日志，设置的日志等级越高，打印出来的日志就越少。-->
         <!-- 此level设置的日志级别，是过滤项目中输出的日志信息，和ThresholdFilter的level有所区别 -->
-        <Root level="ERROR">
+        <Root level="INFO">
             <AppenderRef ref="ConsoleAppender" />
             <AppenderRef ref="FileAppender"/>
         </Root>

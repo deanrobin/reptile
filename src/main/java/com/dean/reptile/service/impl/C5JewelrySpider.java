@@ -358,7 +358,14 @@ public class C5JewelrySpider extends SpiderService {
 
             Integer page = c5.maxSellerPage();
             for (int i = 1; i <= page; ++i) {
-                String request = PREFIX + sellerUrl + str + i;
+                String request = C5_URL + sellerUrl + str + i;
+
+                // 好像会出现429状态 再观察
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 webResult = httpClient.getHtml(request, null);
                 if (webResult.getCode() != 200) {
                     continue;

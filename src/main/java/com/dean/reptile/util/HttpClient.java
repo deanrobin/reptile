@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * @author dean
+ */
 @Component
 public class HttpClient {
 
@@ -32,7 +35,10 @@ public class HttpClient {
 
     static Map<String, String> map = new HashMap<>();
 
+    private static Integer lastRandomNumber = null;
+
     static {
+        // 以后把代理IP配置到数据库
         map.put("47.96.136.190", "8118");
         map.put("117.90.5.192", "9000");
         map.put("112.16.28.103", "8060");
@@ -62,23 +68,9 @@ public class HttpClient {
         map.put("121.8.98.196", "80");
         map.put("221.7.255.168", "8080");
         map.put("120.76.77.152", "9999");
+
+        map.put("117.87.177.58", "9000");
     }
-
-
-
-    //private HttpClient() {}
-    //private static HttpClient httpClient = null;
-    //
-    //public static HttpClient instance() {
-    //    if (httpClient == null) {
-    //        synchronized (HttpClient.class) {
-    //            if (httpClient == null) {
-    //                httpClient = new HttpClient();
-    //            }
-    //        }
-    //    }
-    //    return httpClient;
-    //}
 
     public WebResult getHtml (String url, String charSet) {
         WebResult webResult = new WebResult();
@@ -116,6 +108,7 @@ public class HttpClient {
             webResult.setCode(i);
             if (i != 200) {
                 System.out.println("this Url:" + url + "  --> response code:" + i);
+                log.info("this Url:" + url + "  --> response code:" + i);
                 return webResult;
             }
             connection.connect();
@@ -155,20 +148,29 @@ public class HttpClient {
         return webResult;
     }
 
-
+    // 此方法日后需要重新设计，需要加锁
     public static Map.Entry<String, String> getProxy() {
         Random random = new Random();
 
         int size = map.entrySet().size();
         int a = random.nextInt(size);
+
+        if (lastRandomNumber != null && lastRandomNumber.equals(a)) {
+            getProxy();
+        }
         System.out.println(a);
+        // 赋值
+        lastRandomNumber = a;
+
         int i = 0;
-        for (Map.Entry entry : map.entrySet()) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             if (a == i) {
                 return entry;
             }
             ++i;
         }
+
+
         return null;
     }
 }

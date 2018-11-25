@@ -151,7 +151,7 @@ public class C5 {
     public String getSellerHttpUrl() {
         try {
             Element table = doc.select("table.table.sale-item-table").first();
-            Element element = table.child(1);
+            Element element = table.child(2);
             String url = element.attr("data-url");
             //  return --> /api/product/sale.json?id=553452392
             // 需要&page=1
@@ -166,7 +166,7 @@ public class C5 {
     public Integer maxSellerPage() {
         try {
             Element last = doc.select("li.last").first();
-            String str = last.text();
+            String str = last.child(0).attr("href");
             String prefix = str.substring(0, str.indexOf(".html"));
             String number = prefix.split("-")[2];
             return Integer.valueOf(number);
