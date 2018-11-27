@@ -45,6 +45,7 @@ public class DBTest {
     @Test
     public void insert() {
         log.info("test begin!!");
+        log.error("error test");
         JobRecord jobRecord = new JobRecord();
         jobRecord.setTimestamp(System.currentTimeMillis());
         jobRecord.setStatus(1);
@@ -62,7 +63,7 @@ public class DBTest {
 //        c5JewelrySpider.crawlHistory();
 //        c5JewelrySpider.fetchBuy();
 
-        c5JewelrySpider.fetchSell();
+        //c5JewelrySpider.fetchSell();
 //        System.out.println(
 //                JSON.toJSON(
 //                        jewelryMapper.selectJewelryStatusById(6)));

@@ -25,7 +25,7 @@
             </JsonLayout>-->
             <Filters>
                 <!-- 只记录ERROR级别日志信息，程序打印的其他信息不会被记录 -->
-                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!--<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="NEUTRAL"/>-->
                 <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <Policies>
@@ -56,5 +56,6 @@
             <AppenderRef ref="ConsoleAppender" />
             <AppenderRef ref="FileAppender"/>
         </Root>
+
     </Loggers>
 </Configuration>
