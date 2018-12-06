@@ -22,9 +22,29 @@ public class JewelryService {
         return jewelryMapper.getCount();
     }
 
-    public List<JewelryEx> queryAll() {
-        return jewelryMapper.query(0, Integer.MAX_VALUE);
+    public List<JewelryEx> queryAll(Integer from, Integer offset) {
+        return jewelryMapper.queryAll(from, offset);
     }
+
+    //public Integer queryCount() {
+    //
+    //}
+    //
+    public List<JewelryEx> query() {
+        String sortKey = "id";
+        String sortDesc = "asc";
+        return jewelryMapper.query(null, sortKey, sortDesc, 0, Integer.MAX_VALUE);
+    }
+
+    // 暂时匹配前10个
+    public List<JewelryEx> searchByName(String name) {
+        return jewelryMapper.searchByName(name, 0, 10);
+    }
+
+    public List<JewelryEx> searchByHero(String hero) {
+        return jewelryMapper.searchByHero(hero, 0, 10);
+    }
+
 
     public boolean updateNeed(int id, boolean need) {
         return jewelryMapper.updateNeed(id, need) == 1;

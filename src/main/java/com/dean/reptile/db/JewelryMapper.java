@@ -42,7 +42,7 @@ public interface JewelryMapper {
     Integer getCount();
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id order by jewelry.id asc limit #{page}, #{count};")
-    List<JewelryEx> query(@Param("page") int page, @Param("count") int count);
+    List<JewelryEx> queryAll(@Param("page") int page, @Param("count") int count);
 
     @Update({"update jewelry_status set crawl_history=#{need} where id=#{id}"})
     int updateNeed(@Param("id") int id, @Param("need") boolean need);
@@ -52,4 +52,19 @@ public interface JewelryMapper {
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_sell = true")
     List<JewelryEx> getFetchSell();
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where name like '%#{name}%' order by jewelry.id asc limit #{page}, #{count};")
+    List<JewelryEx> searchByName(@Param("name") String name, @Param("page") int page, @Param("count") int count);
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where hero_name=#{hero} order by jewelry.id asc limit #{page}, #{count};")
+    List<JewelryEx> searchByHero(@Param("hero") String hero, @Param("page") int page, @Param("count") int count);
+
+    @Select("<script> select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id "
+        + "where 1=1 "
+        + "and <if test='hero!=null'> , hero = #{hero} </if> "
+        + "order by jewelry.#{sortKey} #{sortDesc} limit #{page}, #{count}; </script>")
+    List<JewelryEx> query(@Param("hero") String hero,
+                          @Param("sortKey") String sortKey, @Param("sortDesc") String sortDesc,
+                          @Param("page") int page, @Param("count") int count);
+
 }

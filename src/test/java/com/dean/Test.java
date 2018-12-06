@@ -40,7 +40,9 @@ class ThreadRead extends Thread {
 
     @Override
     public void run() {
+
         System.out.println("start 读取");
+        System.out.println(this.getName());
         synchronized (lock) {
             while (Test.num != 180) {
                 try {
@@ -81,7 +83,7 @@ public class Test {
                 pollNum ++;
             }
         };
-
+        thread.setName("a");
         thread.start();
     }
 
@@ -89,6 +91,7 @@ public class Test {
         Object obj = new Object();
         ThreadRead threadRead = new ThreadRead(obj);
         threadRead.start();
+        threadRead.setName("abc");
 
         Thread.sleep(1000L);
         ThreadPut threadPut = new ThreadPut(obj);
