@@ -1,7 +1,11 @@
 package com.dean.reptile.db;
 
+import java.util.List;
+
+import com.dean.reptile.bean.ex.JewelryEx;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.dean.reptile.bean.Transaction;
 import org.springframework.stereotype.Repository;
@@ -17,6 +21,21 @@ public interface TransactionMapper {
 
     @Select("select * from transaction where jewelry_id=#{jewelryId} and seller_name=#{sellerName} and timestamp=#{timestamp}")
     Transaction querySameData(Transaction transaction);
-    //@InsertProvider(type = Transaction.class, method = "saveAll")
-    //void saveAll(@Param("list") List<Transaction> transactions);
+
+    @Select("select count(*) from transaction;")
+    Integer count();
+
+    @Select("select * from transaction order by id asc limit #{page}, #{count};")
+    List<Transaction> queryAll(@Param("page") int page, @Param("count") int count);
+
+    @Select("select * from transaction where id= #{id};")
+    Transaction queryById(@Param("id") int id);
+
+    @Select("<script> select * from transaction "
+        + "where 1=1 "
+        + "and <if test='hero!=null'> , hero = #{hero} </if> "
+        + "order by jewelry.#{sortKey} #{sortDesc} limit #{page}, #{count}; </script>")
+    List<JewelryEx> query(@Param("jewelry_id") Integer jewelryId,
+                          @Param("status") Integer status);
+
 }
