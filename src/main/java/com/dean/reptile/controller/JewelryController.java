@@ -41,8 +41,15 @@ public class JewelryController {
     @RequestMapping(value = "/updateNeed", method = RequestMethod.POST)
     @ResponseBody
     public Boolean updateNeed(@RequestParam(value = "id", required = true) Integer id,
-                              @RequestParam(value = "need", required = true) boolean need) {
-        return jewelryService.updateNeed(id, need);
+                              @RequestParam(value = "historyNeed", required = true) Boolean historyNeed,
+                              @RequestParam(value = "buyNeed", required = true) Boolean buyNeed,
+                              @RequestParam(value = "sellNeed", required = true) Boolean sellNeed,
+                              @RequestParam(value = "noticeBuy", required = true) Boolean noticeBuy,
+                              @RequestParam(value = "noticeSell", required = true) Boolean noticeSell,
+                              @RequestParam(value = "sellPrice", required = true) Double sellPrice,
+                              @RequestParam(value = "buyPrice", required = true) Double buyPrice) {
+        return jewelryService.updateNeed(
+            id, historyNeed, buyNeed, sellNeed, noticeBuy, noticeSell, buyPrice, sellPrice);
     }
 
     @RequestMapping("/queryCount")

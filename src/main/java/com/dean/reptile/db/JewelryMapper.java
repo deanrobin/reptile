@@ -44,8 +44,14 @@ public interface JewelryMapper {
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id order by jewelry.id asc limit #{page}, #{count};")
     List<JewelryEx> queryAll(@Param("page") int page, @Param("count") int count);
 
-    @Update({"update jewelry_status set crawl_history=#{need} where id=#{id}"})
-    int updateNeed(@Param("id") int id, @Param("need") boolean need);
+    @Update({"update jewelry_status set crawl_history=#{historyNeed}, "
+        + "crawl_buy=#{buyNeed}, crawl_sell=#{sellNeed}, "
+        + "notice_buy = #{noticeBuy}, notice_sell = #{noticeSell}, "
+        + "buy_price = #{buyPrice}, sell_price = #{sellPrice} where id=#{id}"})
+    int updateNeed(@Param("id") int id, @Param("historyNeed") boolean historyNeed,
+                   @Param("buyNeed") boolean buyNeed, @Param("sellNeed")boolean sellNeed,
+                   @Param("noticeBuy")boolean noticeBuy, @Param("noticeSell")boolean noticeSell,
+                   @Param("buyPrice")Double buyPrice, @Param("sellPrice")Double sellPrice);
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_buy = true")
     List<JewelryEx> getFetchBuy();

@@ -52,8 +52,10 @@ public class JewelryService {
     }
 
 
-    public boolean updateNeed(int id, boolean need) {
-        return jewelryMapper.updateNeed(id, need) == 1;
+    public boolean updateNeed(int id, boolean historyNeed, boolean buyNeed, boolean sellNeed,
+                              boolean noticeBuy, boolean noticeSell, Double buyPrice, Double sellPrice) {
+        return jewelryMapper.updateNeed(
+            id, historyNeed, buyNeed, sellNeed, noticeBuy, noticeSell, buyPrice, sellPrice) == 1;
     }
 
     public void noticeNewTx() {
