@@ -28,8 +28,8 @@ public class TxController {
     @RequestMapping("/queryAll")
     @ResponseBody
     public List<Transaction> queryAll(
-        @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-        @RequestParam(value = "offset", required = false, defaultValue = Integer.MAX_VALUE + "") Integer offset) {
+        @RequestParam(value = "from") Integer from,
+        @RequestParam(value = "offset") Integer offset) {
         return txService.queryAll(from, offset);
     }
 
@@ -40,11 +40,13 @@ public class TxController {
         return txService.queryById(id);
     }
 
-    @RequestMapping("/query")
+    @RequestMapping("/queryByJewelry")
     @ResponseBody
-    public Transaction query(
-        @RequestParam(value = "jewelryId") Integer jewelryId,
-        @RequestParam(value = "status", required = false) Integer status) {
-        return txService.queryById(id);
+    public List<Transaction> queryByJewelry(
+            @RequestParam(value = "jewelryId") Integer jewelryId,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "from") Integer from,
+            @RequestParam(value = "offset") Integer offset) {
+        return txService.queryByJewelry(jewelryId, status, from, offset);
     }
 }

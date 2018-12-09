@@ -2,7 +2,6 @@ package com.dean.reptile.db;
 
 import java.util.List;
 
-import com.dean.reptile.bean.ex.JewelryEx;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -31,11 +30,12 @@ public interface TransactionMapper {
     @Select("select * from transaction where id= #{id};")
     Transaction queryById(@Param("id") int id);
 
-    @Select("<script> select * from transaction "
+    @Select({"<script> select * from transaction "
         + "where 1=1 "
-        + "and <if test='hero!=null'> , hero = #{hero} </if> "
-        + "order by jewelry.#{sortKey} #{sortDesc} limit #{page}, #{count}; </script>")
-    List<JewelryEx> query(@Param("jewelry_id") Integer jewelryId,
-                          @Param("status") Integer status);
+        + "and <if test='jewelryId!=null'> jewelry_id = #{jewelryId} </if> "
+        + "<if test='status!=null'> and status = #{status} </if> "
+        + "order by transaction.id asc limit #{from}, #{offset}; </script>"})
+    List<Transaction> queryByJewelryId(@Param("jewelryId") Integer jewelryId,
+                            @Param("status") Integer status, @Param("from") Integer from, @Param("offset") Integer offset);
 
 }

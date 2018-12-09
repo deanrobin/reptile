@@ -17,8 +17,12 @@ public interface TaskMapper {
             + "values(#{pageNumber}, #{from}, #{ip}, #{createTime})"})
     void insert(TaskList taskList);
 
-    @Select("select * from task_list where page_number=#{pageNumber} and `from`=#{from}")
-    TaskList selectByIndex(@Param("pageNumber") String pageNumber, @Param("from") String from);
+    @Select("<script> "
+        + "select * from task_list where 1=1 "
+        + "<if test='pageNumber!=null'> and `page_number` = #{pageNumber} </if> "
+        + "<if test='from!=null'> and `from` = #{from} </if> "
+        + ";</script>")
+    List<TaskList> selectByIndex(@Param("pageNumber") String pageNumber, @Param("from") String from);
 
     @Select("select * from task_list order by id asc")
     List<TaskList> selectAll();

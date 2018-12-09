@@ -53,7 +53,7 @@ public interface JewelryMapper {
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_sell = true")
     List<JewelryEx> getFetchSell();
 
-    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where name like '%#{name}%' order by jewelry.id asc limit #{page}, #{count};")
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where jewelry.`name` like '%${name}%' order by jewelry.id asc limit #{page}, #{count};")
     List<JewelryEx> searchByName(@Param("name") String name, @Param("page") int page, @Param("count") int count);
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where hero_name=#{hero} order by jewelry.id asc limit #{page}, #{count};")
@@ -61,7 +61,7 @@ public interface JewelryMapper {
 
     @Select("<script> select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id "
         + "where 1=1 "
-        + "and <if test='hero!=null'> , hero = #{hero} </if> "
+        + "and <if test='hero!=null'> hero = #{hero} </if> "
         + "order by jewelry.#{sortKey} #{sortDesc} limit #{page}, #{count}; </script>")
     List<JewelryEx> query(@Param("hero") String hero,
                           @Param("sortKey") String sortKey, @Param("sortDesc") String sortDesc,

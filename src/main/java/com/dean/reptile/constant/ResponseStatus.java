@@ -2,7 +2,8 @@ package com.dean.reptile.constant;
 
 public enum ResponseStatus {
     SUCCESS("success", 100),
-    TIME_TOO_SHORT("request time too short", 1);
+    TIME_TOO_SHORT("request time too short", 1),
+    OBJECT_IS_EXIST("object is exist", 2);
 
     // 成员变量
     private String name;
