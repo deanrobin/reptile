@@ -53,9 +53,9 @@ public class JewelryController {
 
     @RequestMapping("/query")
     @ResponseBody
-    public List<JewelryEx> query(@RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-                                    @RequestParam(value = "offset", required = false, defaultValue = Integer.MAX_VALUE + "") Integer offset) {
-        return jewelryService.query();
+    public List<JewelryEx> query(@RequestParam(value = "from") Integer from,
+                                    @RequestParam(value = "offset") Integer offset) {
+        return jewelryService.query(from, offset);
     }
 
     @RequestMapping("/searchByName")

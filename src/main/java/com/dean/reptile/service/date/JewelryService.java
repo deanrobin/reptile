@@ -30,10 +30,16 @@ public class JewelryService {
     //
     //}
     //
-    public List<JewelryEx> query() {
+    public List<JewelryEx> query(Integer from, Integer offset) {
         String sortKey = "id";
         String sortDesc = "asc";
-        return jewelryMapper.query(null, sortKey, sortDesc, 0, Integer.MAX_VALUE);
+        if (from == null) {
+            from = 0;
+        }
+        if (offset == null) {
+            offset = Integer.MAX_VALUE;
+        }
+        return jewelryMapper.query(null, sortKey, sortDesc, from, offset);
     }
 
     // 暂时匹配前10个

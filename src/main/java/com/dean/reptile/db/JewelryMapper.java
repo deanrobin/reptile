@@ -61,8 +61,8 @@ public interface JewelryMapper {
 
     @Select("<script> select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id "
         + "where 1=1 "
-        + "and <if test='hero!=null'> hero = #{hero} </if> "
-        + "order by jewelry.#{sortKey} #{sortDesc} limit #{page}, #{count}; </script>")
+        + "<if test='hero!=null'> and hero = #{hero} </if> "
+        + "order by jewelry.${sortKey} ${sortDesc} limit #{page}, #{count}; </script>")
     List<JewelryEx> query(@Param("hero") String hero,
                           @Param("sortKey") String sortKey, @Param("sortDesc") String sortDesc,
                           @Param("page") int page, @Param("count") int count);
