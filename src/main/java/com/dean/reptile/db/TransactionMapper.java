@@ -34,8 +34,9 @@ public interface TransactionMapper {
         + "where 1=1 "
         + "and <if test='jewelryId!=null'> jewelry_id = #{jewelryId} </if> "
         + "<if test='status!=null'> and status = #{status} </if> "
-        + "order by transaction.id asc limit #{from}, #{offset}; </script>"})
+        + "order by ${sortKey} ${sortBy} limit #{from}, #{offset}; </script>"})
     List<Transaction> queryByJewelryId(@Param("jewelryId") Integer jewelryId,
-                            @Param("status") Integer status, @Param("from") Integer from, @Param("offset") Integer offset);
+                            @Param("status") Integer status, @Param("from") Integer from, @Param("offset") Integer offset,
+                            @Param("sortKey") String sortKey, @Param("sortBy") String sortBy);
 
 }

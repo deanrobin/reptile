@@ -46,7 +46,9 @@ public class TxController {
             @RequestParam(value = "jewelryId") Integer jewelryId,
             @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "from") Integer from,
-            @RequestParam(value = "offset") Integer offset) {
-        return txService.queryByJewelry(jewelryId, status, from, offset);
+            @RequestParam(value = "offset") Integer offset,
+            @RequestParam(value = "sortKey", required = false, defaultValue = "timestamp") String sortKey,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "desc") String sortBy) {
+        return txService.queryByJewelry(jewelryId, status, from, offset, sortKey, sortBy);
     }
 }

@@ -27,8 +27,9 @@ public class TxService {
         return txMapper.queryById(id);
     }
 
-    public List<Transaction> queryByJewelry(Integer jewelryId, Integer status, Integer from, Integer offset) {
-        return txMapper.queryByJewelryId(jewelryId, status, from, offset);
+    public List<Transaction> queryByJewelry(Integer jewelryId, Integer status, Integer from,
+                                            Integer offset, String sortKey, String sortBy) {
+        return txMapper.queryByJewelryId(jewelryId, status, from, offset, sortKey, sortBy);
     }
 
 }
