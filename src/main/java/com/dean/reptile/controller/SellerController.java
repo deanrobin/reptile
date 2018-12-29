@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * @author dean
  */
-@RequestMapping(value = "seller")
+@RequestMapping(value = "sell")
 @Controller
 public class SellerController {
     @Autowired
