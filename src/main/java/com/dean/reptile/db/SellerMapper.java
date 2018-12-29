@@ -1,9 +1,10 @@
 package com.dean.reptile.db;
 
+import java.util.List;
+
 import com.dean.reptile.bean.Seller;
 import org.springframework.stereotype.Repository;
 
-import com.dean.reptile.bean.Buyer;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -26,5 +27,36 @@ public interface SellerMapper {
 
     @Update({"update seller set price=#{price}, update_time=#{updateTime}, date=#{date}, status=#{status} where id=#{id}"})
     int updateLastPrice(Seller Seller);
+
+    @Select({"<script> select * from seller "
+        + "where 1=1 "
+        + "and <if test='jewelryId!=null'> jewelry_id = #{jewelryId} </if> "
+        + "<if test='status!=null'> and status = #{status} </if> "
+        + "<if test='price!=null'> and price ${comparison} #{price} </if> "
+        + "order by ${sortKey} ${sortBy} limit #{from}, #{offset}; </script>"})
+    List<Seller> queryByJewelryId(@Param("jewelryId") Integer jewelryId,
+                                 @Param("status") Integer status, @Param("from") Integer from,
+                                 @Param("offset") Integer offset,
+                                 @Param("sortKey") String sortKey, @Param("sortBy") String sortBy,
+                                 @Param("comparison") String comparison, @Param("price") Double price);
+
+    @Select("select count(*) from seller;")
+    Integer count();
+
+    @Select("select * from seller order by id asc limit #{page}, #{count};")
+    List<Seller> queryAll(@Param("page") int page, @Param("count") int count);
+
+    @Select("select * from seller where id= #{id};")
+    Seller queryById(@Param("id") int id);
+
+    @Select({"<script> select count(*) from seller "
+        + "where 1=1 "
+        + "and <if test='jewelryId!=null'> jewelry_id = #{jewelryId} </if> "
+        + "<if test='status!=null'> and status = #{status} </if> "
+        + "<if test='price!=null'> and price ${comparison} #{price} </if> "
+        + "; </script>"})
+    Integer queryByJewelryIdCount(@Param("jewelryId") Integer jewelryId,
+                                  @Param("status") Integer status,
+                                  @Param("comparison") String comparison, @Param("price") Double price);
 }
 
