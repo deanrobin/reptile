@@ -20,8 +20,8 @@ import java.util.List;
 @Controller
 public class JewelryController {
 
-    @Autowired
-    C5JewelrySpider c5JewelrySpider;
+    //@Autowired
+    //C5JewelrySpider c5JewelrySpider;
     @Autowired
     JewelryService jewelryService;
 

@@ -33,7 +33,7 @@ public class HttpClient {
 
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
-    static Map<String, String> map = new HashMap<>();
+    public static Map<String, String> map = new HashMap<>();
 
     private static Integer lastRandomNumber = null;
 
