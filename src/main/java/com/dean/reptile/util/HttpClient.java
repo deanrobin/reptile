@@ -4,6 +4,11 @@ import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.CrawlRecord;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.db.CrawlMapper;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +18,13 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author dean
@@ -39,37 +47,42 @@ public class HttpClient {
 
     static {
         // 以后把代理IP配置到数据库
-        map.put("47.96.136.190", "8118");
-        map.put("117.90.5.192", "9000");
-        map.put("112.16.28.103", "8060");
-        map.put("180.104.63.78", "9000");
-        map.put("139.196.137.255", "8118");
+        //map.put("47.96.136.190", "8118");
+        //map.put("117.90.5.192", "9000");
+        //map.put("112.16.28.103", "8060");
+        //map.put("180.104.63.78", "9000");
+        //map.put("139.196.137.255", "8118");
 
-        map.put("183.230.177.118", "8060");
-        map.put("115.231.5.230", "44524");
-        map.put("182.61.59.147", "9999");
-        map.put("119.145.136.126", "8888");
-        map.put("123.56.86.158", "8080");
-
-        map.put("118.178.227.171", "80");
-        map.put("182.111.64.8", "53364");
-        map.put("47.95.213.117", "80");
-        map.put("183.129.207.84", "33555");
-        map.put("115.218.221.25", "9000");
-
-        map.put("60.171.111.113", "33069");
-        map.put("115.223.211.4", "9000");
-        map.put("49.51.68.122", "1080");
-        map.put("112.25.129.174", "41323");
-        map.put("140.207.25.114", "50750");
-
-        map.put("218.198.117.194", "39248");
-        map.put("117.131.75.134", "80");
-        map.put("121.8.98.196", "80");
-        map.put("221.7.255.168", "8080");
-        map.put("120.76.77.152", "9999");
-
-        map.put("117.87.177.58", "9000");
+        //map.put("183.230.177.118", "8060");
+        //map.put("115.231.5.230", "44524");
+        //map.put("182.61.59.147", "9999");
+        //map.put("119.145.136.126", "8888");
+        //map.put("123.56.86.158", "8080");
+        //
+        //map.put("118.178.227.171", "80");
+        //map.put("182.111.64.8", "53364");
+        //map.put("47.95.213.117", "80");
+        //map.put("183.129.207.84", "33555");
+        //map.put("115.218.221.25", "9000");
+        //
+        //map.put("60.171.111.113", "33069");
+        //map.put("115.223.211.4", "9000");
+        //map.put("49.51.68.122", "1080");
+        //map.put("112.25.129.174", "41323");
+        //map.put("140.207.25.114", "50750");
+        //
+        //map.put("218.198.117.194", "39248");
+        //map.put("117.131.75.134", "80");
+        //map.put("121.8.98.196", "80");
+        //map.put("221.7.255.168", "8080");
+        //map.put("120.76.77.152", "9999");
+        //
+        //map.put("117.87.177.58", "9000");
+        map.put("124.94.196.188", "9999");
+        map.put("110.52.235.76", "9999");
+        map.put("111.177.190.124", "9999");
+        map.put("111.177.175.88", "9999");
+        map.put("115.218.222.77", "9000");
     }
 
     public WebResult getHtml (String url, String charSet) {
@@ -92,8 +105,8 @@ public class HttpClient {
                 connection.setRequestProperty("contentType", charSet);
             }
             // 设置超时
-            connection.setConnectTimeout(10 * 1000);
-            connection.setReadTimeout(10 * 1000);
+            connection.setConnectTimeout(30 * 1000);
+            connection.setReadTimeout(30 * 1000);
             // 设置代理IP
 
             if (entry != null & useProxy) {
@@ -144,6 +157,37 @@ public class HttpClient {
             if (recording) {
                 crawlMapper.insert(url, System.currentTimeMillis(), webResult.getCode(), proxy);
             }
+        }
+        return webResult;
+    }
+
+    public WebResult getOkhttpHtml(String url) {
+        WebResult webResult = new WebResult();
+        webResult.setUrl(url);
+        webResult.setCode(200);
+        try {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            //设置连接超时时间
+            builder.connectTimeout(1, TimeUnit.MINUTES);
+            //设置代理,需要替换
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("110.52.235.76", 9999));
+            builder.proxy(proxy);
+            Map<String, String> map = new HashMap<>();
+            map.put("User-agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+            map.put("Accept-Language", "zh-CN,zh;q=0.8");
+            Headers headers = Headers.of(map);
+            Request cookieRequest = new Request.Builder()
+                .headers(headers)
+                .url(url)
+                .get()
+                .build();
+            Response execute =  builder.build().newCall(cookieRequest).execute();
+            ResponseBody body = execute.body();
+            //System.out.println(body.string());
+            webResult.setResult(body.string());
+            execute.close();
+        } catch (Exception e) {
+            log.error("okhttpGetHtml error", e);
         }
         return webResult;
     }

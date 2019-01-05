@@ -285,7 +285,7 @@ public class C5JewelrySpider extends SpiderService {
         for (JewelryEx je : list) {
             try {
                 String url = PREFIX + je.getHid() + suffix;
-                WebResult webResult = httpClient.getHtml(url, null);
+                WebResult webResult = httpClient.getOkhttpHtml(url);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
@@ -298,7 +298,7 @@ public class C5JewelrySpider extends SpiderService {
 
                 //get 请求
                 url = C5_URL + buyerUrl;
-                webResult = httpClient.getHtml(url, null);
+                webResult = httpClient.getOkhttpHtml(url);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
@@ -352,7 +352,7 @@ public class C5JewelrySpider extends SpiderService {
         List<Seller> sellerList = new ArrayList<>();
         for (JewelryEx je : list) {
             String url = PREFIX + je.getHid() + suffix;
-            WebResult webResult = httpClient.getHtml(url, null);
+            WebResult webResult = httpClient.getOkhttpHtml(url);
             if (webResult.getCode() != 200) {
                 continue;
             }
@@ -378,7 +378,7 @@ public class C5JewelrySpider extends SpiderService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                webResult = httpClient.getHtml(request, null);
+                webResult = httpClient.getOkhttpHtml(request);
                 if (webResult.getCode() != 200) {
                     continue;
                 }
@@ -421,7 +421,7 @@ public class C5JewelrySpider extends SpiderService {
             try {
                 // 更新饰品
                 String url = je.getHtml();
-                WebResult webResult = httpClient.getHtml(url, null);
+                WebResult webResult = httpClient.getOkhttpHtml(url);
                 if (webResult.getCode() != 200) {
                     res = false;
                     continue;
@@ -459,7 +459,7 @@ public class C5JewelrySpider extends SpiderService {
 
 
     private boolean history(String url, Integer jewelryId) {
-        WebResult webResult = httpClient.getHtml(url, null);
+        WebResult webResult = httpClient.getOkhttpHtml(url);
         if (webResult.getCode() != 200) {
             return false;
         }

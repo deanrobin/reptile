@@ -40,20 +40,21 @@ public class C5 {
             jewelry.setName(name.text());
             Elements heros = doc.select("div.ft-gray").select(".mt-5");
 
-            String quality = heros.first().children().get(1).text();
+            //品质
+            String quality = heros.first().child(1).text();
             jewelry.setQuality(quality);
 
+            //稀有度
             String rarity = heros.first().children().get(2).text();
             jewelry.setRarity(rarity);
 
-            String hero = heros.last().text();
+            String hero = heros.first().child(0).text();
             if (hero.equals("")) {
                 // 配置信使
                 Elements x1 = heros.first().children();
                 hero = x1.get(3).text();
             } else {
                 // 正常英雄
-                hero = hero.split("：")[1];
             }
             jewelry.setHeroName(hero);
 
@@ -72,12 +73,13 @@ public class C5 {
                 jewelry.setLastPrice(Double.valueOf(lastPrice));
             }
 
-            Element ul = doc.select("ul.sale-item-num").select(".sale-items-sty1").first();
-            Element total = ul.children().first().child(0);
+            Element div = doc.select("div.ft-gray").select(".mt-5").first();
+            Element zong = div.child(4);
+            Element total = zong.child(0).child(0);
 
             jewelry.setTotalSales(total.text());
 
-            Element week = doc.select("li.twitm").first();
+            Element week = zong.child(1);
             jewelry.setTotalWeek(week.child(0).text());
 
         } catch (Exception e) {

@@ -54,4 +54,6 @@ dependencies {
         exclude module: "logback-classic"
     }
     compile ('org.apache.commons:commons-lang3:3.8.1')
+    compile ('com.squareup.okhttp3:okhttp:3.9.1')
+//    compile ('org.projectlombok:lombok')
 }
