@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * @author dean
  */
@@ -173,22 +175,7 @@ public class C5JewelrySpider extends SpiderService {
             try {
                 Jewelry jewelry = jewelryMapper.selectJewelryById(js.getId());
                 String url = jewelry.getHtml();
-                WebResult webResult = httpClient.getHtml(url, null);
-                if (webResult.getCode() != 200) {
-                    continue;
-                }
-                C5 c5 = new C5(webResult.getResult());
-                List<Transaction> transactions = c5.getTransactionList(jewelry.getId());
-
-                for (Transaction tx : transactions) {
-                    //先查  后插入
-                    Transaction dbTx = transactionMapper.querySameData(tx);
-
-                    if (dbTx == null) {
-                        log.info("there is new transaction insert into DB");
-                        transactionMapper.insert(tx);
-                    }
-                }
+                history(url, jewelry.getId());
             } catch (Exception e) {
                 log.error("", e);
             }
@@ -274,11 +261,21 @@ public class C5JewelrySpider extends SpiderService {
         email.sendEmail(getEmailSubject(), content);
     }
 
-    public void fetchBuy() {
-        List<JewelryEx> list = jewelryMapper.getFetchBuy();
+    public void fetchBuy(Integer id) {
+        List<JewelryEx> list = null;
+        if (id == null) {
+            list = jewelryMapper.getFetchBuy();
+        } else {
+            JewelryEx ex = jewelryMapper.selectJewelryExById(id);
+            if (ex.isCrawlBuy()) {
+                list = new ArrayList<>();
+                list.add(ex);
+            }
+        }
+
 
         if (list == null) {
-            log.error("db error, get jewelry fetch buy return null");
+            log.error("db error, get jewelry fetch buy return null, maybe id is:" + id);
             return;
         }
 
@@ -333,10 +330,20 @@ public class C5JewelrySpider extends SpiderService {
     }
 
 
-    public void fetchSell() {
-        List<JewelryEx> list = jewelryMapper.getFetchSell();
+    public void fetchSell(Integer id) {
+        List<JewelryEx> list = null;
+        if (id == null) {
+            list = jewelryMapper.getFetchSell();
+        } else {
+            JewelryEx ex = jewelryMapper.selectJewelryExById(id);
+            if (ex.isCrawlSell()) {
+                list = new ArrayList<>();
+                list.add(ex);
+            }
+        }
+
         if (list == null) {
-            log.error("db error, get jewelry fetch sell return null");
+            log.error("db error, get jewelry fetch sell return null, maybe id:" + id);
             return;
         }
 
@@ -400,5 +407,80 @@ public class C5JewelrySpider extends SpiderService {
         }
 
         log.info("get seller task over.");
+    }
+
+    public void updateJewelry(List<Integer> listId) {
+        // 需要处理的饰品列表
+        List<JewelryEx> list = new ArrayList<>();
+        for (Integer id : listId) {
+            JewelryEx jewelry = jewelryMapper.selectJewelryExById(id);
+            list.add(jewelry);
+        }
+
+        for (JewelryEx je : list) {
+            try {
+                // 更新饰品
+                String url = je.getHtml();
+                WebResult webResult = httpClient.getHtml(url, null);
+                if (webResult.getCode() != 200) {
+                    continue;
+                }
+                C5 c5 = new C5(webResult.getResult());
+                Jewelry jewelry = c5.getJewelry();
+
+                Long timestamp = System.currentTimeMillis();
+                //if (jewelry.getHeroName().equals("信使")) {
+                //
+                //}
+
+                jewelry.setLastTime(timestamp);
+                jewelryMapper.updateLastPrice(jewelry);
+
+                // 更新历史
+                if (je.isCrawlHistory()) {
+                    history(url, je.getId());
+                }
+
+                if (je.isCrawlBuy()) {
+                    fetchBuy(je.getId());
+                }
+
+                if (je.isCrawlSell()) {
+                    fetchSell(je.getId());
+                }
+            } catch (Exception e) {
+                log.error("Manual updateJewelry error，" ,e);
+            }
+        }
+
+        email.sendEmail(EmailSubjectEnum.MANUAL_UPDATE_JEWELRY.getSubject(), "饰品id:" + JSON.toJSON(listId));
+    }
+
+
+    private void history(String url, Integer jewelryId) {
+        WebResult webResult = httpClient.getHtml(url, null);
+        if (webResult.getCode() != 200) {
+            return;
+        }
+        C5 c5 = new C5(webResult.getResult());
+        List<Transaction> transactions = c5.getTransactionList(jewelryId);
+
+        for (Transaction tx : transactions) {
+            //先查  后插入
+            Transaction dbTx = transactionMapper.querySameData(tx);
+
+            if (dbTx == null) {
+                log.info("there is new transaction insert into DB");
+                transactionMapper.insert(tx);
+            }
+        }
+    }
+
+    public void fetchBuy() {
+        fetchBuy(null);
+    }
+
+    public void fetchSell() {
+        fetchSell(null);
     }
 }

@@ -73,4 +73,7 @@ public interface JewelryMapper {
                           @Param("sortKey") String sortKey, @Param("sortDesc") String sortDesc,
                           @Param("page") int page, @Param("count") int count);
 
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where jewelry.id = #{id}")
+    JewelryEx selectJewelryExById(@Param("id") Integer id);
+
 }

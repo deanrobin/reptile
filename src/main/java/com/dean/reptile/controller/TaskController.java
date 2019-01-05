@@ -1,10 +1,12 @@
 package com.dean.reptile.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dean.reptile.bean.TaskList;
 import com.dean.reptile.bean.response.ResponseBean;
 import com.dean.reptile.constant.ResponseStatus;
+import com.dean.reptile.service.impl.C5JewelrySpider;
 import com.dean.reptile.service.impl.TaskService;
 import com.dean.reptile.util.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class TaskController {
 
     @Autowired
     TaskService taskService;
+    @Autowired
+    C5JewelrySpider c5JewelrySpider;
 
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
     @ResponseBody
@@ -57,4 +61,22 @@ public class TaskController {
 
         return taskService.delete(id);
     }
+
+    @RequestMapping(value = "/crawlJewelry", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean crawlJewelry(@RequestParam(value = "id", required = true) Integer id) {
+        List<Integer> list = new ArrayList<>();
+        list.add(id);
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run(){
+                c5JewelrySpider.updateJewelry(list);
+            }
+        };
+        Thread thread = new Thread(myRunnable);
+        thread.start();
+
+        return true;
+    }
+
 }
