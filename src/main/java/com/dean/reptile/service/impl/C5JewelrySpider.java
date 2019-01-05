@@ -416,13 +416,14 @@ public class C5JewelrySpider extends SpiderService {
             JewelryEx jewelry = jewelryMapper.selectJewelryExById(id);
             list.add(jewelry);
         }
-
+        boolean res = true;
         for (JewelryEx je : list) {
             try {
                 // 更新饰品
                 String url = je.getHtml();
                 WebResult webResult = httpClient.getHtml(url, null);
                 if (webResult.getCode() != 200) {
+                    res = false;
                     continue;
                 }
                 C5 c5 = new C5(webResult.getResult());
@@ -453,14 +454,14 @@ public class C5JewelrySpider extends SpiderService {
             }
         }
 
-        email.sendEmail(EmailSubjectEnum.MANUAL_UPDATE_JEWELRY.getSubject(), "饰品id:" + JSON.toJSON(listId));
+        email.sendEmail(EmailSubjectEnum.MANUAL_UPDATE_JEWELRY.getSubject(), "饰品id:" + JSON.toJSON(listId) + ", result:" + res);
     }
 
 
-    private void history(String url, Integer jewelryId) {
+    private boolean history(String url, Integer jewelryId) {
         WebResult webResult = httpClient.getHtml(url, null);
         if (webResult.getCode() != 200) {
-            return;
+            return false;
         }
         C5 c5 = new C5(webResult.getResult());
         List<Transaction> transactions = c5.getTransactionList(jewelryId);
@@ -474,6 +475,7 @@ public class C5JewelrySpider extends SpiderService {
                 transactionMapper.insert(tx);
             }
         }
+        return true;
     }
 
     public void fetchBuy() {
