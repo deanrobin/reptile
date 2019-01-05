@@ -58,8 +58,8 @@ public class C5 {
             jewelry.setHeroName(hero);
 
             Element priceNode = doc.select("div.hero").first();
-            String priceText = priceNode.child(0).text();
-            String price = priceText.substring(priceText.indexOf("￥") + 1, priceText.indexOf(" )"));
+            //String priceText = priceNode.child(0).text();
+            String price = priceNode.child(1).text() + priceNode.child(2).text();
             jewelry.setIndicativePrice(Double.valueOf(price));
 
             Elements prices = doc.select("span.ft-gold");
