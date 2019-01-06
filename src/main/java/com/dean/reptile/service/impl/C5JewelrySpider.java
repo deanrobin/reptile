@@ -201,7 +201,7 @@ public class C5JewelrySpider extends SpiderService {
             String url = URL + task.getPageNumber() + END;
 //            String url = "https://www.c5game.com/dota/history/22.html";
             try {
-                WebResult webResult = httpClient.getHtml(url, null);
+                WebResult webResult = httpClient.getOkhttpHtml(url);
                 if (webResult.getCode() != 200) {
                     continue;
                 }

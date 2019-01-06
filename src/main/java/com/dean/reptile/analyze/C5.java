@@ -36,7 +36,7 @@ public class C5 {
     public Jewelry getJewelry () {
         Jewelry jewelry = new Jewelry();
         try {
-            Element name = doc.select("div.name").first();
+            Element name = doc.select("span.icon-dota2").first().parent();
             jewelry.setName(name.text());
             Elements heros = doc.select("div.ft-gray").select(".mt-5");
 
