@@ -27,6 +27,8 @@ public class TaskController {
     @Autowired
     C5JewelrySpider c5JewelrySpider;
 
+    String pwd = "CR1V";
+
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean insertTask(@RequestParam(value = "page", required = false) String page,
@@ -71,6 +73,24 @@ public class TaskController {
             @Override
             public void run(){
                 c5JewelrySpider.updateJewelry(list);
+            }
+        };
+        Thread thread = new Thread(myRunnable);
+        thread.start();
+
+        return true;
+    }
+
+    @RequestMapping(value = "/crawlJewelryList", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean updateJewelryListByTaskList(@RequestParam(value = "pwd", required = true) String pwd) {
+        if (pwd.equals(this.pwd)) {
+            return false;
+        }
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run(){
+                c5JewelrySpider.updateJewelryListByTaskList();
             }
         };
         Thread thread = new Thread(myRunnable);
