@@ -177,6 +177,8 @@ public class HttpClient {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             //设置连接超时时间  --15 Ms
             builder.connectTimeout(15, TimeUnit.SECONDS);
+            builder.readTimeout(60, TimeUnit.SECONDS);
+            builder.writeTimeout(15, TimeUnit.SECONDS);
 
             //设置代理,需要替换
             if (entry != null & useProxy) {
