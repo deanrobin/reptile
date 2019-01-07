@@ -38,6 +38,8 @@ public class HttpClient {
     private boolean recording;
     @Value("${http.client.proxy}")
     private boolean useProxy;
+    @Value("${crawl.https.convert}")
+    private boolean convertHttp;
 
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
@@ -162,6 +164,9 @@ public class HttpClient {
     }
 
     public WebResult getOkhttpHtml(String url) {
+        if (convertHttp) {
+            url = convertHttp(url);
+        }
         WebResult webResult = new WebResult();
         webResult.setUrl(url);
         //webResult.setCode(200);
@@ -249,5 +254,14 @@ public class HttpClient {
 
 
         return null;
+    }
+
+    public static String convertHttp(String url) {
+        if (!url.startsWith("https")) {
+            return url;
+        }
+
+        url = "http" + url.substring(5);
+        return url;
     }
 }
