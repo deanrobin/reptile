@@ -36,30 +36,31 @@ public class C5 {
     public Jewelry getJewelry () {
         Jewelry jewelry = new Jewelry();
         try {
-            Element name = doc.select("div.name").first();
+            Element name = doc.select("span.icon-dota2").first().parent();
             jewelry.setName(name.text());
             Elements heros = doc.select("div.ft-gray").select(".mt-5");
 
-            String quality = heros.first().children().get(1).text();
+            //品质
+            String quality = heros.first().child(1).text();
             jewelry.setQuality(quality);
 
+            //稀有度
             String rarity = heros.first().children().get(2).text();
             jewelry.setRarity(rarity);
 
-            String hero = heros.last().text();
+            String hero = heros.first().child(0).text();
             if (hero.equals("")) {
                 // 配置信使
                 Elements x1 = heros.first().children();
                 hero = x1.get(3).text();
             } else {
                 // 正常英雄
-                hero = hero.split("：")[1];
             }
             jewelry.setHeroName(hero);
 
             Element priceNode = doc.select("div.hero").first();
-            String priceText = priceNode.child(0).text();
-            String price = priceText.substring(priceText.indexOf("￥") + 1, priceText.indexOf(" )"));
+            //String priceText = priceNode.child(0).text();
+            String price = priceNode.child(1).text() + priceNode.child(2).text();
             jewelry.setIndicativePrice(Double.valueOf(price));
 
             Elements prices = doc.select("span.ft-gold");
@@ -72,12 +73,13 @@ public class C5 {
                 jewelry.setLastPrice(Double.valueOf(lastPrice));
             }
 
-            Element ul = doc.select("ul.sale-item-num").select(".sale-items-sty1").first();
-            Element total = ul.children().first().child(0);
+            Element div = doc.select("div.ft-gray").select(".mt-5").first();
+            Element zong = div.child(4);
+            Element total = zong.child(0).child(0);
 
             jewelry.setTotalSales(total.text());
 
-            Element week = doc.select("li.twitm").first();
+            Element week = zong.child(1);
             jewelry.setTotalWeek(week.child(0).text());
 
         } catch (Exception e) {
@@ -146,6 +148,35 @@ public class C5 {
         Element element = table.child(1);
         String url = element.attr("data-url");
         return url;
+    }
+
+    public String getSellerHttpUrl() {
+        try {
+            Element table = doc.select("table.table.sale-item-table").first();
+            Element element = table.child(2);
+            String url = element.attr("data-url");
+            //  return --> /api/product/sale.json?id=553452392
+            // 需要&page=1
+            return url.split("&")[0];
+        } catch (Exception e) {
+            log.error("get seller url error,", e);
+            return null;
+        }
+
+    }
+
+    public Integer maxSellerPage() {
+        try {
+            Element last = doc.select("li.last").first();
+            String str = last.child(0).attr("href");
+            String prefix = str.substring(0, str.indexOf(".html"));
+            String number = prefix.split("-")[2];
+            return Integer.valueOf(number);
+        } catch (Exception e) {
+            log.error("seller get page number error", e);
+            return null;
+        }
+
     }
 
 //    public Transaction getTransaction() {

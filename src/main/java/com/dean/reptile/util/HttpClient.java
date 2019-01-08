@@ -4,6 +4,11 @@ import com.dean.reptile.analyze.C5;
 import com.dean.reptile.bean.CrawlRecord;
 import com.dean.reptile.bean.own.WebResult;
 import com.dean.reptile.db.CrawlMapper;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +18,17 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * @author dean
+ */
 @Component
 public class HttpClient {
 
@@ -27,12 +38,17 @@ public class HttpClient {
     private boolean recording;
     @Value("${http.client.proxy}")
     private boolean useProxy;
+    @Value("${crawl.https.convert}")
+    private boolean convertHttp;
 
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
-    static Map<String, String> map = new HashMap<>();
+    public static Map<String, String> map = new HashMap<>();
+
+    private static Integer lastRandomNumber = null;
 
     static {
+        // 以后把代理IP配置到数据库
         map.put("47.96.136.190", "8118");
         map.put("117.90.5.192", "9000");
         map.put("112.16.28.103", "8060");
@@ -62,23 +78,14 @@ public class HttpClient {
         map.put("121.8.98.196", "80");
         map.put("221.7.255.168", "8080");
         map.put("120.76.77.152", "9999");
+
+        map.put("117.87.177.58", "9000");
+        map.put("124.94.196.188", "9999");
+        map.put("110.52.235.76", "9999");
+        map.put("111.177.190.124", "9999");
+        map.put("111.177.175.88", "9999");
+        map.put("115.218.222.77", "9000");
     }
-
-
-
-    //private HttpClient() {}
-    //private static HttpClient httpClient = null;
-    //
-    //public static HttpClient instance() {
-    //    if (httpClient == null) {
-    //        synchronized (HttpClient.class) {
-    //            if (httpClient == null) {
-    //                httpClient = new HttpClient();
-    //            }
-    //        }
-    //    }
-    //    return httpClient;
-    //}
 
     public WebResult getHtml (String url, String charSet) {
         WebResult webResult = new WebResult();
@@ -100,8 +107,8 @@ public class HttpClient {
                 connection.setRequestProperty("contentType", charSet);
             }
             // 设置超时
-            connection.setConnectTimeout(5 * 1000);
-            connection.setReadTimeout(5 * 1000);
+            connection.setConnectTimeout(30 * 1000);
+            connection.setReadTimeout(30 * 1000);
             // 设置代理IP
 
             if (entry != null & useProxy) {
@@ -116,6 +123,7 @@ public class HttpClient {
             webResult.setCode(i);
             if (i != 200) {
                 System.out.println("this Url:" + url + "  --> response code:" + i);
+                log.info("this Url:" + url + "  --> response code:" + i);
                 return webResult;
             }
             connection.connect();
@@ -155,20 +163,107 @@ public class HttpClient {
         return webResult;
     }
 
+    public WebResult getOkhttpHtml(String url) {
+        if (convertHttp) {
+            url = convertHttp(url);
+        }
+        WebResult webResult = new WebResult();
+        webResult.setUrl(url);
+        //webResult.setCode(200);
+        Map.Entry<String, String> entry = getProxy();
+        Response execute = null;
+        ResponseBody body = null;
+        try {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            //设置连接超时时间  --15 Ms
+            builder.connectTimeout(15, TimeUnit.SECONDS);
+            builder.readTimeout(60, TimeUnit.SECONDS);
+            builder.writeTimeout(15, TimeUnit.SECONDS);
 
+            //设置代理,需要替换
+            if (entry != null & useProxy) {
+                Proxy proxy = new Proxy(Proxy.Type.HTTP,
+                    new InetSocketAddress(entry.getKey(), Integer.valueOf(entry.getValue())));
+                builder.proxy(proxy);
+            }
+            // header
+            Map<String, String> map = new HashMap<>();
+            map.put("User-agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+            map.put("Accept-Language", "zh-CN,zh;q=0.8");
+            Headers headers = Headers.of(map);
+
+            Request request = new Request.Builder()
+                .headers(headers)
+                .url(url)
+                .get()
+                .build();
+            execute =  builder.build().newCall(request).execute();
+            body = execute.body();
+            //System.out.println(body.string());
+            webResult.setResult(body.string());
+            webResult.setCode(200);
+            execute.close();
+        } catch (java.net.SocketTimeoutException ste) {
+            webResult.setCode(-1);
+            log.info("this url socket Time out:" + url);
+        } catch (java.net.UnknownHostException e) {
+            webResult.setCode(-2);
+            log.info("this url unknow host:" + url);
+        } catch (Exception e) {
+            log.error("this url error -->" + url, e);
+        } finally {
+            try {
+                if (body != null) {
+                    body.close();
+                }
+                if (execute != null) {
+                    execute.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+
+            //
+            String proxy = useProxy ? entry.getKey() : "localhost";
+            if (recording) {
+                crawlMapper.insert(url, System.currentTimeMillis(), webResult.getCode(), proxy);
+            }
+        }
+        return webResult;
+    }
+
+    // 此方法日后需要重新设计，需要加锁
     public static Map.Entry<String, String> getProxy() {
         Random random = new Random();
 
         int size = map.entrySet().size();
         int a = random.nextInt(size);
-        System.out.println(a);
+
+        if (lastRandomNumber != null && lastRandomNumber.equals(a)) {
+            getProxy();
+        }
+        //System.out.println(a);
+        // 赋值
+        lastRandomNumber = a;
+
         int i = 0;
-        for (Map.Entry entry : map.entrySet()) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             if (a == i) {
                 return entry;
             }
             ++i;
         }
+
+
         return null;
+    }
+
+    public static String convertHttp(String url) {
+        if (!url.startsWith("https")) {
+            return url;
+        }
+
+        url = "http" + url.substring(5);
+        return url;
     }
 }

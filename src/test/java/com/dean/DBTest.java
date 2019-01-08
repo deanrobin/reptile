@@ -12,6 +12,8 @@ import com.dean.reptile.service.impl.C5JewelrySpider;
 import com.dean.reptile.util.HttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DBTest {
+    private static Logger log = LoggerFactory.getLogger(DBTest.class);
 
     @Autowired
     JobRecordMapper jobRecordMapper;
@@ -41,6 +44,8 @@ public class DBTest {
 
     @Test
     public void insert() {
+        log.info("test begin!!");
+        log.error("error test");
         JobRecord jobRecord = new JobRecord();
         jobRecord.setTimestamp(System.currentTimeMillis());
         jobRecord.setStatus(1);
@@ -56,7 +61,9 @@ public class DBTest {
 //        System.out.println(heroMapper.update(1, "abc"));
 //        c5JewelrySpider.updateJewelryListByTaskList();
 //        c5JewelrySpider.crawlHistory();
-        c5JewelrySpider.fetchBuy();
+//        c5JewelrySpider.fetchBuy();
+
+        //c5JewelrySpider.fetchSell();
 //        System.out.println(
 //                JSON.toJSON(
 //                        jewelryMapper.selectJewelryStatusById(6)));

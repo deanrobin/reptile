@@ -48,18 +48,18 @@ public class InitController {
         return ResponseBean.getSuccess();
     }
 
-    @RequestMapping("/getBuy")
-    @ResponseBody
-    public String getBuy() {
-        long l = System.currentTimeMillis();
-        if (l - visitTime < timeInterval) {
-            return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
-        }
-        visitTime = l;
-        QuartzClient quartzClient = QuartzClient.instance();
-        quartzClient.getPurchaseIntent();
-        return "Get buy data has started";
-    }
+    //@RequestMapping("/getBuy")
+    //@ResponseBody
+    //public String getBuy() {
+    //    long l = System.currentTimeMillis();
+    //    if (l - visitTime < timeInterval) {
+    //        return "you need wait for about:" + (l - visitTime) / (1000 * 60) + " minute";
+    //    }
+    //    visitTime = l;
+    //    QuartzClient quartzClient = QuartzClient.instance();
+    //    quartzClient.getPurchaseIntent();
+    //    return "Get buy data has started";
+    //}
 
     /**
      * 更新饰品名字列表

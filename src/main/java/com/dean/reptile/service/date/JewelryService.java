@@ -22,12 +22,40 @@ public class JewelryService {
         return jewelryMapper.getCount();
     }
 
-    public List<JewelryEx> queryAll() {
-        return jewelryMapper.query(0, Integer.MAX_VALUE);
+    public List<JewelryEx> queryAll(Integer from, Integer offset) {
+        return jewelryMapper.queryAll(from, offset);
     }
 
-    public boolean updateNeed(int id, boolean need) {
-        return jewelryMapper.updateNeed(id, need) == 1;
+    //public Integer queryCount() {
+    //
+    //}
+    //
+    public List<JewelryEx> query(Integer from, Integer offset) {
+        String sortKey = "id";
+        String sortDesc = "asc";
+        if (from == null) {
+            from = 0;
+        }
+        if (offset == null) {
+            offset = Integer.MAX_VALUE;
+        }
+        return jewelryMapper.query(null, sortKey, sortDesc, from, offset);
+    }
+
+    // 暂时匹配前10个
+    public List<JewelryEx> searchByName(String name) {
+        return jewelryMapper.searchByName(name, 0, 10);
+    }
+
+    public List<JewelryEx> searchByHero(String hero) {
+        return jewelryMapper.searchByHero(hero, 0, 10);
+    }
+
+
+    public boolean updateNeed(int id, boolean historyNeed, boolean buyNeed, boolean sellNeed,
+                              boolean noticeBuy, boolean noticeSell, Double buyPrice, Double sellPrice) {
+        return jewelryMapper.updateNeed(
+            id, historyNeed, buyNeed, sellNeed, noticeBuy, noticeSell, buyPrice, sellPrice) == 1;
     }
 
     public void noticeNewTx() {

@@ -13,7 +13,16 @@ public class Buyer {
     private Integer status;
     private Integer number;
     private Long updateTime;
+    private Long createDate;
+    private Long buyId;
 
+    public Long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
+    }
 
     public int getId() {
         return id;
@@ -85,6 +94,14 @@ public class Buyer {
 
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getBuyId() {
+        return buyId;
+    }
+
+    public void setBuyId(Long buyId) {
+        this.buyId = buyId;
     }
 }
 

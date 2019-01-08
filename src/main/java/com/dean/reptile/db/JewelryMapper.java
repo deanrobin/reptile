@@ -42,14 +42,38 @@ public interface JewelryMapper {
     Integer getCount();
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id order by jewelry.id asc limit #{page}, #{count};")
-    List<JewelryEx> query(@Param("page") int page, @Param("count") int count);
+    List<JewelryEx> queryAll(@Param("page") int page, @Param("count") int count);
 
-    @Update({"update jewelry_status set crawl_history=#{need} where id=#{id}"})
-    int updateNeed(@Param("id") int id, @Param("need") boolean need);
+    @Update({"update jewelry_status set crawl_history=#{historyNeed}, "
+        + "crawl_buy=#{buyNeed}, crawl_sell=#{sellNeed}, "
+        + "notice_buy = #{noticeBuy}, notice_sell = #{noticeSell}, "
+        + "buy_price = #{buyPrice}, sell_price = #{sellPrice} where id=#{id}"})
+    int updateNeed(@Param("id") int id, @Param("historyNeed") boolean historyNeed,
+                   @Param("buyNeed") boolean buyNeed, @Param("sellNeed")boolean sellNeed,
+                   @Param("noticeBuy")boolean noticeBuy, @Param("noticeSell")boolean noticeSell,
+                   @Param("buyPrice")Double buyPrice, @Param("sellPrice")Double sellPrice);
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_buy = true")
     List<JewelryEx> getFetchBuy();
 
     @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where crawl_sell = true")
     List<JewelryEx> getFetchSell();
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where jewelry.`name` like '%${name}%' order by jewelry.id asc limit #{page}, #{count};")
+    List<JewelryEx> searchByName(@Param("name") String name, @Param("page") int page, @Param("count") int count);
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where hero_name=#{hero} order by jewelry.id asc limit #{page}, #{count};")
+    List<JewelryEx> searchByHero(@Param("hero") String hero, @Param("page") int page, @Param("count") int count);
+
+    @Select("<script> select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id "
+        + "where 1=1 "
+        + "<if test='hero!=null'> and hero = #{hero} </if> "
+        + "order by jewelry.${sortKey} ${sortDesc} limit #{page}, #{count}; </script>")
+    List<JewelryEx> query(@Param("hero") String hero,
+                          @Param("sortKey") String sortKey, @Param("sortDesc") String sortDesc,
+                          @Param("page") int page, @Param("count") int count);
+
+    @Select("select * from jewelry left join jewelry_status ON jewelry.id = jewelry_status.id where jewelry.id = #{id}")
+    JewelryEx selectJewelryExById(@Param("id") Integer id);
+
 }
