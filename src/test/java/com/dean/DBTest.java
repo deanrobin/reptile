@@ -80,8 +80,8 @@ public class DBTest {
 
     @Test
     public void testHtml() {
-        String url = "https://www.c5game.com/api/product/purchase.json?id=553399785&page=1";
-
-        System.out.println(httpClient.getHtml(url, "null").getResult());;
+        //String url = "https://www.c5game.com/api/product/purchase.json?id=553399785&page=1";
+        //
+        //System.out.println(httpClient.getHtml(url, "null").getResult());;
     }
 }
